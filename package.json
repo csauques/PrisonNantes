@@ -1,0 +1,23 @@
+{
+  "name": "prisonnantes",
+  "version": "1.0.0",
+  "description": "Projet SOA",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/csauques/PrisonNantes.git"
+  },
+  "author": "Lucas Guillemeau et Chloé Sauques",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/csauques/PrisonNantes/issues"
+  },
+  "homepage": "https://github.com/csauques/PrisonNantes#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.6.3"
+  }
+}
