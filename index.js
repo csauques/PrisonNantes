@@ -20,7 +20,7 @@ MongoClient.connect(url, function(err, client) {
                     det.readAllDetenu(db, function() {
                         det.deleteDetenu(db, function() {
                             det.readAllDetenu(db, function() {
-                                client.close();
+                                //client.close();
                             });
                         });
                     });
@@ -32,7 +32,13 @@ MongoClient.connect(url, function(err, client) {
 
 
 app.get('/', function (req, res) {
-     res.send('Hello World!');
+    db.collection('Detenu').find({}).toArray(function(err, docs) {
+       if (err) {
+           console.log(err)
+           throw err
+       }
+       res.status(200).json(docs)
+     })
 })
 
 app.listen(3000, function () {
