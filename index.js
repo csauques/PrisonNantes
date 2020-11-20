@@ -13,14 +13,32 @@ let db;
 MongoClient.connect(url, function(err, client) {
     console.log("Connected successfully to server");
     db = client.db(dbName);
-    det.findDetenu(db, function() {
-        client.close();
+    det.readAllDetenu(db, function() {
+        det.createDetenu(db, function() {
+            det.readAllDetenu(db, function() {
+                det.updateDetenu(db, function() {
+                    det.readAllDetenu(db, function() {
+                        det.deleteDetenu(db, function() {
+                            det.readAllDetenu(db, function() {
+                                //client.close();
+                            });
+                        });
+                    });
+                });
+            });
+        });
     });
 });
 
 
 app.get('/', function (req, res) {
-     res.send('Hello World!');
+    db.collection('Detenu').find({}).toArray(function(err, docs) {
+       if (err) {
+           console.log(err)
+           throw err
+       }
+       res.status(200).json(docs)
+     })
 })
 
 app.listen(3000, function () {
