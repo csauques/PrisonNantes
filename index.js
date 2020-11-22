@@ -1,4 +1,4 @@
-var det = require('./detenu');
+var det = require('./crud');
 
 const express = require('express');
 const app = express();
@@ -13,13 +13,13 @@ let db;
 MongoClient.connect(url, function(err, client) {
     console.log("Connected successfully to server");
     db = client.db(dbName);
-    det.readAllDetenu(db, function() {
-        det.createDetenu(db, function() {
-            det.readAllDetenu(db, function() {
-                det.updateDetenu(db, function() {
-                    det.readAllDetenu(db, function() {
-                        det.deleteDetenu(db, function() {
-                            det.readAllDetenu(db, function() {
+    det.readAll(db, 'Detenu', function() {
+        det.create(db, 'Detenu', function() {
+            det.readAll(db, 'Detenu', function() {
+                det.update(db, 'Detenu', function() {
+                    det.readAll(db, 'Detenu', function() {
+                        det.delete(db, 'Detenu', function() {
+                            det.readAll(db, 'Detenu', function() {
                                 //client.close();
                             });
                         });

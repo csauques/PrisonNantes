@@ -1,6 +1,6 @@
 
 module.exports = {
-    readAll : function(db, callback, nomCol) {
+    readAll : function(db, nomCol, callback) {
           // Get the documents collection
           const collection = db.collection(nomCol);
           // Find some documents
@@ -11,7 +11,7 @@ module.exports = {
           });
     },
 
-    read : function(db, callback, nomCol) {
+    read : function(db, nomCol, callback) {
           // Get the documents collection
           const collection = db.collection(nomCol);
           // Find some documents
@@ -22,7 +22,7 @@ module.exports = {
           });
     },
 
-    create : function(db, callback, nomCol) {
+    create : function(db, nomCol, callback) {
         // Get the documents collection
         const collection = db.collection(nomCol);
 
@@ -34,7 +34,7 @@ module.exports = {
         });
     },
 
-    update : function(db, callback, nomCol) {
+    update : function(db, nomCol, callback) {
         // Get the documents collection
         const collection = db.collection(nomCol);
 
@@ -45,7 +45,7 @@ module.exports = {
         });
     },
 
-    delete : function(db, callback, nomCol) {
+    delete : function(db, nomCol, callback) {
         // Get the documents collection
         const collection = db.collection(nomCol);
 
