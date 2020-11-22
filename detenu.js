@@ -1,6 +1,6 @@
 
 module.exports = {
-    readAllDetenu : function(db, callback) {
+    readAllDetenu : function(db, callback, nomCol) {
           // Get the documents collection
           const collection = db.collection('Detenu');
           // Find some documents
@@ -11,7 +11,7 @@ module.exports = {
           });
     },
 
-    readDetenu : function(db, callback) {
+    readDetenu : function(db, callback, nomCol) {
           // Get the documents collection
           const collection = db.collection('Detenu');
           // Find some documents
@@ -22,7 +22,7 @@ module.exports = {
           });
     },
 
-    createDetenu : function(db, callback) {
+    createDetenu : function(db, callback, nomCol) {
         // Get the documents collection
         const collection = db.collection('Detenu');
 
@@ -34,7 +34,7 @@ module.exports = {
         });
     },
 
-    updateDetenu : function(db, callback) {
+    updateDetenu : function(db, callback, nomCol) {
         // Get the documents collection
         const collection = db.collection('Detenu');
 
@@ -45,7 +45,7 @@ module.exports = {
         });
     },
 
-    deleteDetenu : function(db, callback) {
+    deleteDetenu : function(db, callback, nomCol) {
         // Get the documents collection
         const collection = db.collection('Detenu');
 
