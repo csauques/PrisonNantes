@@ -1,0 +1,16 @@
+[
+    {
+        "n_ecrou":"1963",
+        "prerom": "Franck",
+        "nom": "Barbier",
+        "date_naissance": new Date("<1963-01-11>"),
+        "lieu_naissance": "Montbeliard"
+    },
+    {
+        "n_ecrou":"1964",
+        "prerom": "Sophie",
+        "nom": "Darnal",
+        "date_naissance": new Date("<1964-07-28>"),
+        "lieu_naissance": "Besancon"
+    }
+]

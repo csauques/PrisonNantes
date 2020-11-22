@@ -1,0 +1,7 @@
+[
+    {
+        "n_affaire":"44",
+        "nom_juridiction": "Nantes",
+        "date_faits": new Date("<1991-10-01>")
+    }
+]

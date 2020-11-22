@@ -37,7 +37,7 @@ app.get('/', function (req, res) {
            console.log(err)
            throw err
        }
-       res.status(200).json(docs)
+       res.status(200).json(docs);
      })
 })
 

@@ -1,0 +1,8 @@
+[
+    {
+        "n_type_decision":"3",
+        "n_ecrou": "1964",
+        "date_decision" : new Date("<2006-11-23>") ,
+        "date_liberation" : new Date("<2007-01-01>")
+    }
+]
