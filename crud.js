@@ -1,36 +1,35 @@
 
 module.exports = {
-    readAll : function(db, nomCol, callback) {
+    readAll : function(db, nomCol, res) {
           // Get the documents collection
           const collection = db.collection(nomCol);
           // Find some documents
           collection.find({}).toArray(function(err, docs) {
-                console.log("Found the following records");
-                console.log(docs)
-                callback(docs);
+                console.log(docs);
+                res.send(docs);
           });
+
     },
 
-    read : function(db, nomCol, callback) {
+    /*read : function(db, nomCol, callback) {
           // Get the documents collection
           const collection = db.collection(nomCol);
           // Find some documents
+          let result;
           collection.find({'a': 3 }).toArray(function(err, docs) {
-                console.log("Found the following records");
                 console.log(docs);
+                result = docs;
                 callback(docs);
           });
-    },
+          return result;
+    },*/
 
-    create : function(db, nomCol, callback) {
+    create : function(db, nomCol, objnew) {
         // Get the documents collection
         const collection = db.collection(nomCol);
 
-        collection.insertMany([
-            {_id : 2}
-        ], function(err, result){
+        collection.insert(objnew, null, function(err, result){
             console.log("Inserted document into the collection");
-            callback(result);
         });
     },
 

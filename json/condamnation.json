@@ -1,0 +1,8 @@
+[
+    {
+        "n_type_decision":"1",
+        "n_ecrou": "1963",
+        "date_decision" : new Date("<2006-11-22>") ,
+        "duree" : 10
+    }
+]

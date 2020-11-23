@@ -13,7 +13,7 @@ let db;
 MongoClient.connect(url, function(err, client) {
     console.log("Connected successfully to server");
     db = client.db(dbName);
-    det.readAll(db, 'Detenu', function() {
+    /*det.readAll(db, 'Detenu', function() {
         det.create(db, 'Detenu', function() {
             det.readAll(db, 'Detenu', function() {
                 det.update(db, 'Detenu', function() {
@@ -27,18 +27,22 @@ MongoClient.connect(url, function(err, client) {
                 });
             });
         });
-    });
+    });*/
 });
 
 
 app.get('/', function (req, res) {
-    db.collection('Detenu').find({}).toArray(function(err, docs) {
-       if (err) {
-           console.log(err)
-           throw err
-       }
-       res.status(200).json(docs);
-     })
+    res.send("Hello world")
+})
+
+app.get('/Detenu', function (req, res) {
+    det.readAll(db, 'Detenu', res);
+})
+
+app.post('/Detenu', function (req, res) {
+    const new = req.body;
+    
+
 })
 
 app.listen(3000, function () {
