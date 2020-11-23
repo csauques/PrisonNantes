@@ -19,7 +19,7 @@ MongoClient.connect(url, function(err, client) {
                 det.update(db, 'Detenu', function() {
                     det.readAll(db, 'Detenu', function() {
                         det.delete(db, 'Detenu', function() {
-                            det.readAll(db, 'Detenu', function() {
+                            det.readAll(db, 'Detenu', function()
                                 //client.close();
                             });
                         });
@@ -41,11 +41,26 @@ app.get('/Detenu', function (req, res) {
 
 app.post('/Detenu', function (req, res) {
     const new = req.body;
-    
+    det.create(db, 'Detenu', new);
+})
 
+app.put('/Detenu/:id', async (req,res) => {
+    const id = parseInt(req.params.id)
+    const new = req.body;
+    det.update(db, 'Detenu', new, id);
+
+})
+
+app.delete('/Detenu/:id', async (req,res) => {
+    try {
+        const id = parseInt(req.params.id)
+        det.delete(db, 'Detenu', id);
+    } catch (err) {
+        console.log(err)
+        throw err
+    }
 })
 
 app.listen(3000, function () {
      console.log('Votre app est disponible sur localhost:3000 !')
-     console.log('Branche Lucas')
 })

@@ -33,24 +33,22 @@ module.exports = {
         });
     },
 
-    update : function(db, nomCol, callback) {
+    update : function(db, nomCol, objnew, id) {
         // Get the documents collection
         const collection = db.collection(nomCol);
 
-        collection.updateOne({_id : 2}
-            , {$set: {a : 10} }, function(err, result){
+        collection.updateOne({_id : id}
+            , {$set: objnew }, function(err, result){
             console.log("Update document into the collection");
-            callback(result);
         });
     },
 
-    delete : function(db, nomCol, callback) {
+    delete : function(db, nomCol, id) {
         // Get the documents collection
         const collection = db.collection(nomCol);
 
         collection.deleteOne({_id : 2}, function(err, result){
             console.log("Delete document into the collection");
-            callback(result);
         });
     }
 }
