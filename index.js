@@ -2,7 +2,7 @@ var crud = require('./crud');
 var express = require('express'),
     app     = express(),
     port    = parseInt(process.env.PORT, 10) || 3000;
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017';
@@ -57,6 +57,18 @@ app.delete('/Detenu/:id', async (req,res) => {
     const id_text = "{ n_ecrou : " + id + " }";
     crud.delete(db, 'Detenu', id_text);
     res.send("Reussi");
+})
+
+const axios = require('axios');
+// --------INCARCERER
+app.get('/incarcerer/:idDet', function (req, res) {
+    axios.get('http://localhost:3000/detenu')
+    .then(response => {
+        response.data.forEach(element => console.log(element.prenom));
+    })
+    .catch(error => {
+        console.log(error);
+    });
 })
 
 app.listen(3000, function () {

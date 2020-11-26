@@ -2,6 +2,6 @@
     {
         "n_affaire":"44",
         "nom_juridiction": "Nantes",
-        "date_faits": new Date("<1991-10-01>")
+        "date_faits": new Date('1995-12-17T03:24:00')
     }
 ]
