@@ -1,7 +1,12 @@
-var det = require('./crud');
+var crud = require('./crud');
 
-const express = require('express');
-const app = express();
+var express = require('express'),
+    app     = express(),
+    port    = parseInt(process.env.PORT, 10) || 3000;
+
+var bodyParser = require('body-parser')
+
+app.use(bodyParser.json());
 
 
 const MongoClient = require('mongodb').MongoClient;
@@ -32,33 +37,31 @@ MongoClient.connect(url, function(err, client) {
 
 
 app.get('/', function (req, res) {
-    res.send("Hello world")
+    res.send("Serveur pour la prison de Nantes !");
 })
 
-app.get('/Detenu', function (req, res) {
-    det.readAll(db, 'Detenu', res);
+app.get('/detenu', function (req, res) {
+    crud.readAll(db, 'Detenu', res);
 })
 
-app.post('/Detenu', function (req, res) {
-    const new = req.body;
-    det.create(db, 'Detenu', new);
+app.post('/detenu', function (req, res) {
+    const newDet = req.body;
+    crud.create(db, 'Detenu', newDet);
+    res.send("Reussi");
 })
 
-app.put('/Detenu/:id', async (req,res) => {
-    const id = parseInt(req.params.id)
-    const new = req.body;
-    det.update(db, 'Detenu', new, id);
-
+app.put('/detenu/:id', async (req,res) => {
+    const id = req.params.id;
+    const newDet = req.body;
+    crud.update(db, 'Detenu', newDet, id);
+    res.send("Reussi");
 })
 
 app.delete('/Detenu/:id', async (req,res) => {
-    try {
-        const id = parseInt(req.params.id)
-        det.delete(db, 'Detenu', id);
-    } catch (err) {
-        console.log(err)
-        throw err
-    }
+        const id = req.params.id;
+        crud.delete(db, 'Detenu', id);
+        res.send("Reussi");
+
 })
 
 app.listen(3000, function () {

@@ -1,12 +1,10 @@
 
 module.exports = {
     readAll : function(db, nomCol, res) {
-          // Get the documents collection
           const collection = db.collection(nomCol);
-          // Find some documents
-          collection.find({}).toArray(function(err, docs) {
-                console.log(docs);
-                res.send(docs);
+          collection.find({}).toArray(function(err, result) {
+                console.log(result);
+                res.send(result);
           });
 
     },
@@ -28,17 +26,14 @@ module.exports = {
         // Get the documents collection
         const collection = db.collection(nomCol);
 
-        collection.insert(objnew, null, function(err, result){
-            console.log("Inserted document into the collection");
-        });
+        collection.insertOne(objnew);
     },
 
     update : function(db, nomCol, objnew, id) {
         // Get the documents collection
         const collection = db.collection(nomCol);
 
-        collection.updateOne({_id : id}
-            , {$set: objnew }, function(err, result){
+        collection.updateOne({n_ecrou : id}, {$set: objnew }, function(err, result){
             console.log("Update document into the collection");
         });
     },
@@ -47,7 +42,7 @@ module.exports = {
         // Get the documents collection
         const collection = db.collection(nomCol);
 
-        collection.deleteOne({_id : 2}, function(err, result){
+        collection.deleteOne({n_ecrou :id}, function(err, result){
             console.log("Delete document into the collection");
         });
     }
