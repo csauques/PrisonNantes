@@ -9,6 +9,7 @@ const url = 'mongodb://localhost:27017';
 const dbName = 'Prison';
 let db;
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 MongoClient.connect(url, function(err, client) {
@@ -59,16 +60,47 @@ app.delete('/Detenu/:id', async (req,res) => {
     res.send("Reussi");
 })
 
+// --------Affaire
+//Page pour lire les données de Detenu
+app.get('/affaire', function (req, res) {
+    crud.readAll(db, 'Affaire', res);
+})
+
 const axios = require('axios');
 // --------INCARCERER
-app.get('/incarcerer/:idDet', function (req, res) {
-    axios.get('http://localhost:3000/detenu')
-    .then(response => {
-        response.data.forEach(element => console.log(element.prenom));
+app.get('/incarcerer', function (req, res) {
+    res.sendFile( __dirname  + '/views/nouveauDetenu.html');
+})
+
+app.post('/incarcerer', function (req, res) {
+    const newDet = req.body;
+    console.log(newDet);
+    axios.post('http://localhost:3000/detenu', newDet)
+    .then(function (response) {
+        res.redirect('/incarcerer/' + newDet.n_ecrou);
     })
-    .catch(error => {
+    .catch(function (error) {
         console.log(error);
     });
+
+})
+
+app.get('/incarcerer/:id', function (req, res) {
+  axios.get('http://localhost:3000/affaire')
+  .then(response => {
+      const affaires = response.data;
+      res.render("incarcerer.ejs", {affaires: affaires});
+  })
+})
+
+app.post('/incarcerer/affaire', function (req, res) {
+    const idA = req.body.n_ecrou;
+    if (idA == "-1") {
+
+    }else{
+      res.redirect('/incarcerer/affaire');
+    }
+    res.send(newDet);
 })
 
 app.listen(3000, function () {

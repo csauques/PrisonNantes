@@ -1,7 +1,6 @@
-[
-    {
-        "n_affaire":"44",
-        "nom_juridiction": "Nantes",
-        "date_faits": new Date('1995-12-17T03:24:00')
-    }
-]
+var creatingDate = new Date('1995-12-17T00:00:00Z');
+db.Affaire.insertOne({
+    "n_affaire":"44",
+    "nom_juridiction": "Nantes",
+    "date_faits": creatingDate
+});

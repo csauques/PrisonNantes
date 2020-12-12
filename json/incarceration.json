@@ -1,9 +1,9 @@
-[
-    {
-        "n_ecrou":"1963",
-        "n_affaire": "44",
-        "nom_juridiction" : "Nantes" ,
-        "date_incarceration" : new Date("<2008-04-16>"),
-        "n_motif" : "01"
-    }
-]
+
+var creatingDate = new Date('2008-04-16T00:00:00Z');
+db.Incarceration.insertOne({
+    "n_ecrou":"1963",
+    "n_affaire": "44",
+    "nom_juridiction" : "Nantes" ,
+    "date_incarceration" : creatingDate,
+    "n_motif" : "01"
+});

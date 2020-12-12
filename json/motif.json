@@ -1,6 +1,5 @@
-[
-    {
-        "n_motif":"01",
-        "libelle_motif": "vols et délits assimilés"
-    }
-]
+
+db.Motif.insertOne({
+    "n_motif":"01",
+    "libelle_motif": "vols et délits assimilés"
+});

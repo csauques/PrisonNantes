@@ -1,0 +1,15 @@
+<form action="" method="post">
+
+
+  <% for(var i=0; i<affaires.length; i++){ %>
+  <input type="radio" name="n_ecrou" value=<%= detenus[i].n_ecrou %> id=<%= detenus[i].n_ecrou %> />
+  <p><%= affaires[i].n_ecrou %></p>
+  <p><%= affaires[i].nom %></p>
+  <p><%= affaires[i].prenom %></p>
+  <% } %>
+
+  <input type="radio" name="n_ecrou" value="-1" id="-1" /> <p> Nouveau detenu </p>
+
+  <input type="submit" value="Envoyer" />
+
+</form>
