@@ -1,0 +1,21 @@
+<form action="" method="post">
+
+
+  <% for(var i=0; i<detenus.length; i++){ %>
+  <input type="radio" name="n_ecrou" value=<%= detenus[i].n_ecrou %> id=<%= detenus[i].n_ecrou %> />
+  <p><%= detenus[i].n_ecrou %>  <%= detenus[i].prenom %>  <%= detenus[i].nom %> <%= detenus[i].date_naissance %>  <%= detenus[i].lieu_naissance %></p>
+  <% } %>
+
+  <div>
+    <label for="date_decision">Date de la decision:</label>
+    <input type="date" id="date_decision" name="date_decision">
+  </div>
+
+  <div>
+    <label for="date_liberation">Date de la libération :</label>
+    <input type="date" id="date_liberation" name="date_liberation">
+  </div>
+
+  <input type="submit" value="Envoyer" />
+
+</form>

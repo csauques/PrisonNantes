@@ -99,6 +99,58 @@ app.post('/incarceration', function (req, res) {
     res.send("Reussi");
 })
 
+// --------Decision
+//Page pour lire les données de decision
+app.get('/decision', function (req, res) {
+    crud.readAll(db, 'Decision', res);
+})
+
+//Permet de créer une decision
+app.post('/decision', function (req, res) {
+    const newDet = req.body;
+    crud.create(db, 'Decision', newDet);
+    res.send("Reussi");
+})
+
+
+// --------Liberation Definitive
+//Page pour lire les données de liberation definitive
+app.get('/liberationDefinitive', function (req, res) {
+    crud.readAll(db, 'LiberationDefinitive', res);
+})
+
+//Permet de créer une liberation definitive
+app.post('/liberationDefinitive', function (req, res) {
+    const newDet = req.body;
+    crud.create(db, 'LiberationDefinitive', newDet);
+    res.send("Reussi");
+})
+
+// --------Condamnation
+//Page pour lire les données de condamnation
+app.get('/condamnation', function (req, res) {
+    crud.readAll(db, 'Condamnation', res);
+})
+
+//Permet de créer une condamnation
+app.post('/condamnation', function (req, res) {
+    const newDet = req.body;
+    crud.create(db, 'Condamnation', newDet);
+    res.send("Reussi");
+})
+
+// --------Reduction Peine
+//Page pour lire les données de reduction peine
+app.get('/reductionPeine', function (req, res) {
+    crud.readAll(db, 'ReductionPeine', res);
+})
+
+//Permet de créer une reduction peine
+app.post('/reductionPeine', function (req, res) {
+    const newDet = req.body;
+    crud.create(db, 'ReductionPeine', newDet);
+    res.send("Reussi");
+})
 
 const axios = require('axios');
 // --------INCARCERER
@@ -159,7 +211,7 @@ app.post('/incarcerer/:idDet/newAffaire', function (req, res) {
     });
 })
 
-//
+//ouvre la page pour chosir le motif
 app.get('/incarcerer/:idDet/affaire/:idAff/motif', function (req, res) {
   axios.get('http://localhost:3000/motif')
   .then(response => {
@@ -168,6 +220,8 @@ app.get('/incarcerer/:idDet/affaire/:idAff/motif', function (req, res) {
   })
 })
 
+//si choix est nouveau motif et va vers une page pour créer nouveau motif
+//sinon créer l'incarceration
 app.post('/incarcerer/:idDet/affaire/:idAff/motif', function (req, res) {
     const motif = req.body;
     const idDet = req.params.idDet;
@@ -183,6 +237,7 @@ app.post('/incarcerer/:idDet/affaire/:idAff/motif', function (req, res) {
     }
 })
 
+//créer un nouveau motif puis après l'incarcerartion
 app.post('/incarcerer/:idDet/affaire/:idAff/newMotif', function (req, res) {
     const idDet = req.params.idDet;
     const idAff = req.params.idAff;
@@ -202,8 +257,106 @@ app.post('/incarcerer/:idDet/affaire/:idAff/newMotif', function (req, res) {
     .catch(function (error) {
         console.log(error);
     });
-
 })
+
+//-------------------decider condamnation, réduction peine ou libération définitive
+//appelle la page pour créer une liberation definitive
+app.get('/deciderLiberationDefinitive', function (req, res) {
+  axios.get('http://localhost:3000/detenu')
+  .then(response => {
+      const detenus = response.data;
+      res.render("liberationDefinitive.ejs", {detenus: detenus});
+  })
+  .catch(function (error) {
+      console.log(error);
+  });
+})
+
+//créer une decision puis une liberation definitive
+app.post('/deciderLiberationDefinitive', function (req, res) {
+    const newL = req.body;
+    let decision = {n_type_decision : "3", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision};
+    let lib = {n_type_decision : "3", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision, date_liberation : newL.date_liberation};
+    axios.post('http://localhost:3000/decision', decision)
+    .then(function (response) {
+      axios.post('http://localhost:3000/liberationDefinitive', lib)
+      .then(function (response) {
+          res.redirect('/liberationDefinitive');
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+})
+
+
+//appelle la page pour créer une condamnation
+app.get('/deciderCondamnation', function (req, res) {
+  axios.get('http://localhost:3000/detenu')
+  .then(response => {
+      const detenus = response.data;
+      res.render("condamnation.ejs", {detenus: detenus});
+  })
+  .catch(function (error) {
+      console.log(error);
+  });
+})
+
+//créer une decision puis une condamnation
+app.post('/deciderCondamnation', function (req, res) {
+    const newL = req.body;
+    let decision = {n_type_decision : "1", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision};
+    let lib = {n_type_decision : "1", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision, duree : newL.duree};
+    axios.post('http://localhost:3000/decision', decision)
+    .then(function (response) {
+      axios.post('http://localhost:3000/condamnation', lib)
+      .then(function (response) {
+          res.redirect('/condamnation');
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+})
+
+//appelle la page pour créer une condamnation
+app.get('/deciderReductionPeine', function (req, res) {
+  axios.get('http://localhost:3000/detenu')
+  .then(response => {
+      const detenus = response.data;
+      res.render("reductionPeine.ejs", {detenus: detenus});
+  })
+  .catch(function (error) {
+      console.log(error);
+  });
+})
+
+//créer une decision puis une condamnation
+app.post('/deciderReductionPeine', function (req, res) {
+    const newL = req.body;
+    let decision = {n_type_decision : "2", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision};
+    let lib = {n_type_decision : "2", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision, duree : newL.duree};
+    axios.post('http://localhost:3000/decision', decision)
+    .then(function (response) {
+      axios.post('http://localhost:3000/reductionPeine', lib)
+      .then(function (response) {
+          res.redirect('/reductionPeine');
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+})
+
 
 app.listen(3000, function () {
     console.log('Votre app est disponible sur localhost:3000 !')
