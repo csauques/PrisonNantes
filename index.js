@@ -45,7 +45,7 @@ app.post('/detenu', function (req, res) {
 })
 
 //Permet de modifier un detenu selon l'id
-app.put('/detenu/:id', function (req,res) => {
+app.put('/detenu/:id', function (req,res) {
     const id = req.params.id;
     const texte_id = "{ n_ecrou : " + id + " }";
     const newDetenu = req.body;
@@ -54,7 +54,7 @@ app.put('/detenu/:id', function (req,res) => {
 })
 
 //Permet de supprimer un detenu selon l'id
-app.delete('/detenu/:id', function (req,res) => {
+app.delete('/detenu/:id', function (req,res) {
     const id = req.params.id;
     const texte_id = "{ n_ecrou : " + id + " }";
     crud.delete(db, 'Detenu', texte_id);
@@ -234,7 +234,10 @@ app.post('/incarcerer/:idDet/affaire/:idAff/newMotif', function (req, res) {
     const newMotif = req.body;
     axios.post('http://localhost:3000/motif', newMotif)
     .then(function (response) {
-        let incarcerer = {n_ecrou : idDet, n_affaire : idAff, nom_juridiction : "Nantes", date_incarceration : Date.now(), motif : newMotif.n_motif };
+        const now = new Date();
+        const texte_now = (('0'+now.getDate()   ).slice(-2)) + "/" + (('0'+now.getMonth()+1).slice(-2)) + "/" + now.getFullYear();
+        console.log(now.getDate());
+        let incarcerer = {n_ecrou : idDet, n_affaire : idAff, nom_juridiction : "Nantes", date_incarceration : texte_now, motif : newMotif.n_motif };
         axios.post('http://localhost:3000/incarceration', incarcerer)
         .then(function (response) {
             res.redirect('/incarceration');
@@ -314,6 +317,9 @@ app.post('/deciderReductionPeine', function (req, res) {
 })
 
 
+//-------------------detenu en préventive
+
+
 app.listen(3000, function () {
-    console.log('Votre app est disponible sur localhost:3000 !')
+    console.log('Votre app est disponible sur localhost:3000 !');
 })
