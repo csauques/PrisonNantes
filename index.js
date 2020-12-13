@@ -67,11 +67,35 @@ app.get('/affaire', function (req, res) {
     crud.readAll(db, 'Affaire', res);
 })
 
+//Page pour lire les données d'une affaire selon son id
+app.get('/affaire/:id', function (req, res) {
+    const id = req.params.id;
+    const texte_id = "{ n_affaire : " + id + " }";
+    crud.read(db, 'Affaire', texte_id, res);
+})
+
 //Permet de créer une affaire
 app.post('/affaire', function (req, res) {
     const newAffaire = req.body;
     crud.create(db, 'Affaire', newAffaire);
     res.send("Reussi à créer une affaire");
+})
+
+//Permet de modifier une affaire selon l'id
+app.put('/affaire/:id', function (req,res) {
+    const id = req.params.id;
+    const texte_id = "{ n_affaire : " + id + " }";
+    const newAffaire = req.body;
+    crud.update(db, 'Affaire', newAffaire, texte_id);
+    res.send("Reussi à modifier une affaire");
+})
+
+//Permet de supprimer une affaire selon l'id
+app.delete('/affaire/:id', function (req,res) {
+    const id = req.params.id;
+    const texte_id = "{ n_affaire : " + id + " }";
+    crud.delete(db, 'Affaire', texte_id);
+    res.send("Reussi à supprimer une affaire");
 })
 
 // --------Motif
@@ -80,11 +104,35 @@ app.get('/motif', function (req, res) {
     crud.readAll(db, 'Motif', res);
 })
 
+//Page pour lire les données d'un motif selon son id
+app.get('/motif/:id', function (req, res) {
+    const id = req.params.id;
+    const texte_id = "{ n_motif : " + id + " }";
+    crud.read(db, 'Motif', texte_id, res);
+})
+
 //Permet de créer un motif
 app.post('/motif', function (req, res) {
     const newMotif = req.body;
     crud.create(db, 'Motif', newMotif);
     res.send("Reussi à créer un motif");
+})
+
+//Permet de modifier un motif selon l'id
+app.put('/motif/:id', function (req,res) {
+    const id = req.params.id;
+    const texte_id = "{ n_motif : " + id + " }";
+    const newMotif = req.body;
+    crud.update(db, 'Motif', newMotif, texte_id);
+    res.send("Reussi à modifier un motif");
+})
+
+//Permet de supprimer un motif selon l'id
+app.delete('/motif/:id', function (req,res) {
+    const id = req.params.id;
+    const texte_id = "{ n_motif : " + id + " }";
+    crud.delete(db, 'Motif', texte_id);
+    res.send("Reussi à supprimer un motif");
 })
 
 // --------Incarceration
@@ -153,6 +201,20 @@ app.post('/reductionPeine', function (req, res) {
     res.send("Reussi à créer une réduction de peine");
 })
 
+// --------Detenu Affaire
+//Page pour lire les données des detenus et affaires
+app.get('/detenuAffaire', function (req, res) {
+    crud.readAll(db, 'DetenuAffaire', res);
+})
+
+//Permet de créer un detenu et affaire
+app.post('/detenuAffaire', function (req, res) {
+    const newRP = req.body;
+    crud.create(db, 'DetenuAffaire', newRP);
+    res.send("Reussi à créer un detenu et affaire");
+})
+
+
 //----------------------------------- Fin CRUD
 
 // --------INCARCERER
@@ -219,7 +281,10 @@ app.post('/incarcerer/:idDet/affaire/:idAff/motif', function (req, res) {
     if (motif.n_motif == "-1") {
         res.sendFile( __dirname  + '/views/nouveauMotif.html');
     }else{
-        let incarcerer = {n_ecrou : idDet, n_affaire : idAff, nom_juridiction : "Nantes", date_incarceration : Date.now().getDate(), motif : motif.n_motif };
+        const now = new Date();
+        const texte_now = (('0'+now.getDate()   ).slice(-2)) + "/" + (('0'+now.getMonth()+1).slice(-2)) + "/" + now.getFullYear();
+        console.log(now.getDate());
+        let incarcerer = {n_ecrou : idDet, n_affaire : idAff, nom_juridiction : "Nantes", date_incarceration : texte_now, motif : motif.n_motif };
         axios.post('http://localhost:3000/incarceration', incarcerer)
         .then(function (response) {
             res.redirect('/incarceration');
@@ -318,7 +383,28 @@ app.post('/deciderReductionPeine', function (req, res) {
 
 
 //-------------------detenu en préventive
-
+app.get('/preventive', function (req, res) {
+    db.collection('Detenu').aggregate([
+    { $lookup:
+       {
+         from: 'DetenuAffaire',
+         localField: 'n_ecrou',
+         foreignField: 'n_ecrou',
+         as: 'affaire'
+       }
+     }
+    ]).toArray(function(err, result){
+        let detenuPreventive = [];
+        if (err) throw err;
+        //console.log(result);
+        result.forEach((det) => {
+            if (det.affaire.length == 0) {
+                detenuPreventive.push(det);
+            }
+        });
+        res.render("preventive.ejs", {detenuPreventive: detenuPreventive});
+    });
+})
 
 app.listen(3000, function () {
     console.log('Votre app est disponible sur localhost:3000 !');

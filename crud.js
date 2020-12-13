@@ -8,7 +8,6 @@ module.exports = {
 
     read : function(db, nomCol, id, res) {
         const collection = db.collection(nomCol);
-        let result;
         collection.find(id).toArray(function(err, result) {
             res.send(result);
         });
