@@ -1,8 +1,9 @@
-var crud = require('./crud');
-var express = require('express'),
+const crud = require('./crud');
+const express = require('express'),
     app     = express(),
     port    = parseInt(process.env.PORT, 10) || 3000;
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
+const axios = require('axios');
 
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017';
@@ -13,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 MongoClient.connect(url, function(err, client) {
-    console.log("Connected successfully to server");
+    console.log("Connecté à la base de données de la prison");
     db = client.db(dbName);
 });
 
@@ -22,137 +23,138 @@ app.get('/', function (req, res) {
     res.send("Serveur pour la prison de Nantes !");
 })
 
+//-----------------------------------CRUD
 // --------Detenu
-//Page pour lire les données de Detenu
+//Page pour lire les données de tous les detenus
 app.get('/detenu', function (req, res) {
     crud.readAll(db, 'Detenu', res);
 })
 
-//Page pour lire les données d'un Detenu selon son id
+//Page pour lire les données d'un detenu selon son id
 app.get('/detenu/:id', function (req, res) {
     const id = req.params.id;
-    const id_text = "{ n_ecrou : " + id + " }";
-    console.log(id_text);
-    crud.read(db, 'Detenu', id_text, res);
+    const texte_id = "{ n_ecrou : " + id + " }";
+    crud.read(db, 'Detenu', texte_id, res);
 })
 
 //Permet de créer un detenu
 app.post('/detenu', function (req, res) {
-    const newDet = req.body;
-    crud.create(db, 'Detenu', newDet);
-    res.send("Reussi");
+    const newDetenu = req.body;
+    crud.create(db, 'Detenu', newDetenu);
+    res.send("Reussi à inserer un detenu");
 })
 
 //Permet de modifier un detenu selon l'id
-app.put('/detenu/:id', async (req,res) => {
+app.put('/detenu/:id', function (req,res) => {
     const id = req.params.id;
-    const id_text = "{ n_ecrou : " + id + " }";
-    const newDet = req.body;
-    crud.update(db, 'Detenu', newDet, id_text);
-    res.send("Reussi");
+    const texte_id = "{ n_ecrou : " + id + " }";
+    const newDetenu = req.body;
+    crud.update(db, 'Detenu', newDetenu, texte_id);
+    res.send("Reussi à modifier un detenu");
 })
 
 //Permet de supprimer un detenu selon l'id
-app.delete('/Detenu/:id', async (req,res) => {
+app.delete('/detenu/:id', function (req,res) => {
     const id = req.params.id;
-    const id_text = "{ n_ecrou : " + id + " }";
-    crud.delete(db, 'Detenu', id_text);
-    res.send("Reussi");
+    const texte_id = "{ n_ecrou : " + id + " }";
+    crud.delete(db, 'Detenu', texte_id);
+    res.send("Reussi à supprimer un detenu");
 })
 
 // --------Affaire
-//Page pour lire les données de Affaire
+//Page pour lire les données des affaires
 app.get('/affaire', function (req, res) {
     crud.readAll(db, 'Affaire', res);
 })
 
 //Permet de créer une affaire
 app.post('/affaire', function (req, res) {
-    const newDet = req.body;
-    crud.create(db, 'Affaire', newDet);
-    res.send("Reussi");
+    const newAffaire = req.body;
+    crud.create(db, 'Affaire', newAffaire);
+    res.send("Reussi à créer une affaire");
 })
 
 // --------Motif
-//Page pour lire les données de Motif
+//Page pour lire les données des motifs
 app.get('/motif', function (req, res) {
     crud.readAll(db, 'Motif', res);
 })
 
 //Permet de créer un motif
 app.post('/motif', function (req, res) {
-    const newDet = req.body;
-    crud.create(db, 'Motif', newDet);
-    res.send("Reussi");
+    const newMotif = req.body;
+    crud.create(db, 'Motif', newMotif);
+    res.send("Reussi à créer un motif");
 })
 
 // --------Incarceration
-//Page pour lire les données de Motif
+//Page pour lire les données des incarcérations
 app.get('/incarceration', function (req, res) {
     crud.readAll(db, 'Incarceration', res);
 })
 
-//Permet de créer un motif
+//Permet de créer une incarceration
 app.post('/incarceration', function (req, res) {
-    const newDet = req.body;
-    crud.create(db, 'Incarceration', newDet);
-    res.send("Reussi");
+    const newInc = req.body;
+    crud.create(db, 'Incarceration', newInc);
+    res.send("Reussi à créer une incarceration");
 })
 
 // --------Decision
-//Page pour lire les données de decision
+//Page pour lire les données des decisions
 app.get('/decision', function (req, res) {
     crud.readAll(db, 'Decision', res);
 })
 
 //Permet de créer une decision
 app.post('/decision', function (req, res) {
-    const newDet = req.body;
-    crud.create(db, 'Decision', newDet);
-    res.send("Reussi");
+    const newDecision = req.body;
+    crud.create(db, 'Decision', newDecision);
+    res.send("Reussi à créer un decision");
 })
 
 
 // --------Liberation Definitive
-//Page pour lire les données de liberation definitive
+//Page pour lire les données des liberations definitive
 app.get('/liberationDefinitive', function (req, res) {
     crud.readAll(db, 'LiberationDefinitive', res);
 })
 
 //Permet de créer une liberation definitive
 app.post('/liberationDefinitive', function (req, res) {
-    const newDet = req.body;
-    crud.create(db, 'LiberationDefinitive', newDet);
-    res.send("Reussi");
+    const newLB = req.body;
+    crud.create(db, 'LiberationDefinitive', newLB);
+    res.send("Reussi à créer une libération définitive");
 })
 
 // --------Condamnation
-//Page pour lire les données de condamnation
+//Page pour lire les données des condamnations
 app.get('/condamnation', function (req, res) {
     crud.readAll(db, 'Condamnation', res);
 })
 
 //Permet de créer une condamnation
 app.post('/condamnation', function (req, res) {
-    const newDet = req.body;
-    crud.create(db, 'Condamnation', newDet);
-    res.send("Reussi");
+    const newCond = req.body;
+    crud.create(db, 'Condamnation', newCond);
+    res.send("Reussi à créer une condamnation");
 })
 
 // --------Reduction Peine
-//Page pour lire les données de reduction peine
+//Page pour lire les données des reductions de peine
 app.get('/reductionPeine', function (req, res) {
     crud.readAll(db, 'ReductionPeine', res);
 })
 
-//Permet de créer une reduction peine
+//Permet de créer une reduction de peine
 app.post('/reductionPeine', function (req, res) {
-    const newDet = req.body;
-    crud.create(db, 'ReductionPeine', newDet);
-    res.send("Reussi");
+    const newRP = req.body;
+    crud.create(db, 'ReductionPeine', newRP);
+    res.send("Reussi à créer une réduction de peine");
 })
 
-const axios = require('axios');
+//----------------------------------- Fin CRUD
+
 // --------INCARCERER
 //Ouvre page pour faire un nouveau detenu
 app.get('/incarcerer', function (req, res) {
@@ -161,29 +163,20 @@ app.get('/incarcerer', function (req, res) {
 
 //créer un nouveau detenu puis redirect sur la suite
 app.post('/incarcerer', function (req, res) {
-    const newDet = req.body;
-    console.log(newDet);
-    axios.post('http://localhost:3000/detenu', newDet)
+    const newDetenu = req.body;
+    axios.post('http://localhost:3000/detenu', newDetenu)
     .then(function (response) {
-        res.redirect('/incarcerer/' + newDet.n_ecrou + "/affaire");
+        res.redirect('/incarcerer/' + newDetenu.n_ecrou + "/affaire");
     })
-    .catch(function (error) {
-        console.log(error);
-    });
-
 })
 
 //ouvre la page pour choisir affaire
 app.get('/incarcerer/:idDet/affaire', function (req, res) {
-  const idDet = req.params.idDet;
-  console.log(idDet);
     axios.get('http://localhost:3000/affaire')
     .then(response => {
         const affaires = response.data;
         res.render("choixAffaire.ejs", {affaires: affaires});
     })
-
-
 })
 
 //si choix est nouveau affaire et va vers une page pour créer nouvel affaire
@@ -194,30 +187,27 @@ app.post('/incarcerer/:idDet/affaire', function (req, res) {
     if (affaire.n_affaire == "-1") {
         res.sendFile( __dirname  + '/views/nouvelleAffaire.html');
     }else{
-      res.redirect('/incarcerer/' + idDet + "/affaire/" + affaire.n_affaire + "/motif");
+        res.redirect('/incarcerer/' + idDet + "/affaire/" + affaire.n_affaire + "/motif");
     }
 })
 
 //crée la nouvelle affaire
 app.post('/incarcerer/:idDet/newAffaire', function (req, res) {
-    const newAff = req.body;
+    const newAffaire = req.body;
     const idDet = req.params.idDet;
-    axios.post('http://localhost:3000/affaire', newAff)
+    axios.post('http://localhost:3000/affaire', newAffaire)
     .then(function (response) {
-        res.redirect('/incarcerer/' + idDet + "/affaire/" + newAff.n_affaire + "/motif");
+        res.redirect('/incarcerer/' + idDet + "/affaire/" + newAffaire.n_affaire + "/motif");
     })
-    .catch(function (error) {
-        console.log(error);
-    });
 })
 
 //ouvre la page pour chosir le motif
 app.get('/incarcerer/:idDet/affaire/:idAff/motif', function (req, res) {
-  axios.get('http://localhost:3000/motif')
-  .then(response => {
-      const motifs = response.data;
-      res.render("choixMotif.ejs", {motifs: motifs});
-  })
+    axios.get('http://localhost:3000/motif')
+    .then(response => {
+        const motifs = response.data;
+        res.render("choixMotif.ejs", {motifs: motifs});
+    })
 })
 
 //si choix est nouveau motif et va vers une page pour créer nouveau motif
@@ -229,11 +219,11 @@ app.post('/incarcerer/:idDet/affaire/:idAff/motif', function (req, res) {
     if (motif.n_motif == "-1") {
         res.sendFile( __dirname  + '/views/nouveauMotif.html');
     }else{
-      let incarcerer = {n_ecrou : idDet, n_affaire : idAff, nom_juridiction : "Nantes", date_incarceration : Date.now(), motif : motif.n_motif };
-      axios.post('http://localhost:3000/incarceration', incarcerer)
-      .then(function (response) {
-          res.redirect('/incarceration');
-      })
+        let incarcerer = {n_ecrou : idDet, n_affaire : idAff, nom_juridiction : "Nantes", date_incarceration : Date.now().getDate(), motif : motif.n_motif };
+        axios.post('http://localhost:3000/incarceration', incarcerer)
+        .then(function (response) {
+            res.redirect('/incarceration');
+        })
     }
 })
 
@@ -242,119 +232,85 @@ app.post('/incarcerer/:idDet/affaire/:idAff/newMotif', function (req, res) {
     const idDet = req.params.idDet;
     const idAff = req.params.idAff;
     const newMotif = req.body;
-
     axios.post('http://localhost:3000/motif', newMotif)
     .then(function (response) {
-      let incarcerer = {n_ecrou : idDet, n_affaire : idAff, nom_juridiction : "Nantes", date_incarceration : Date.now(), motif : newMotif.n_motif };
-      axios.post('http://localhost:3000/incarceration', incarcerer)
-      .then(function (response) {
-          res.redirect('/incarceration');
-      })
-      .catch(function (error) {
-          console.log(error);
-      });
+        let incarcerer = {n_ecrou : idDet, n_affaire : idAff, nom_juridiction : "Nantes", date_incarceration : Date.now(), motif : newMotif.n_motif };
+        axios.post('http://localhost:3000/incarceration', incarcerer)
+        .then(function (response) {
+            res.redirect('/incarceration');
+        })
     })
-    .catch(function (error) {
-        console.log(error);
-    });
 })
 
 //-------------------decider condamnation, réduction peine ou libération définitive
 //appelle la page pour créer une liberation definitive
 app.get('/deciderLiberationDefinitive', function (req, res) {
-  axios.get('http://localhost:3000/detenu')
-  .then(response => {
-      const detenus = response.data;
-      res.render("liberationDefinitive.ejs", {detenus: detenus});
-  })
-  .catch(function (error) {
-      console.log(error);
-  });
+    axios.get('http://localhost:3000/detenu')
+    .then(response => {
+        const detenus = response.data;
+        res.render("liberationDefinitive.ejs", {detenus: detenus});
+    })
 })
 
 //créer une decision puis une liberation definitive
 app.post('/deciderLiberationDefinitive', function (req, res) {
     const newL = req.body;
-    let decision = {n_type_decision : "3", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision};
-    let lib = {n_type_decision : "3", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision, date_liberation : newL.date_liberation};
+    const decision = {n_type_decision : "3", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision};
+    const libDef = {n_type_decision : "3", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision, date_liberation : newL.date_liberation};
     axios.post('http://localhost:3000/decision', decision)
     .then(function (response) {
-      axios.post('http://localhost:3000/liberationDefinitive', lib)
-      .then(function (response) {
-          res.redirect('/liberationDefinitive');
-      })
-      .catch(function (error) {
-          console.log(error);
-      });
+        axios.post('http://localhost:3000/liberationDefinitive', libDef)
+        .then(function (response) {
+            res.redirect('/liberationDefinitive');
+        })
     })
-    .catch(function (error) {
-        console.log(error);
-    });
 })
 
 
 //appelle la page pour créer une condamnation
 app.get('/deciderCondamnation', function (req, res) {
-  axios.get('http://localhost:3000/detenu')
-  .then(response => {
-      const detenus = response.data;
-      res.render("condamnation.ejs", {detenus: detenus});
-  })
-  .catch(function (error) {
-      console.log(error);
-  });
+    axios.get('http://localhost:3000/detenu')
+    .then(response => {
+        const detenus = response.data;
+        res.render("condamnation.ejs", {detenus: detenus});
+    })
 })
 
 //créer une decision puis une condamnation
 app.post('/deciderCondamnation', function (req, res) {
-    const newL = req.body;
-    let decision = {n_type_decision : "1", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision};
-    let lib = {n_type_decision : "1", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision, duree : newL.duree};
+    const newC = req.body;
+    const decision = {n_type_decision : "1", n_ecrou : newC.n_ecrou, date_decision : newC.date_decision};
+    const cond = {n_type_decision : "1", n_ecrou : newC.n_ecrou, date_decision : newC.date_decision, duree : newC.duree};
     axios.post('http://localhost:3000/decision', decision)
     .then(function (response) {
-      axios.post('http://localhost:3000/condamnation', lib)
-      .then(function (response) {
-          res.redirect('/condamnation');
-      })
-      .catch(function (error) {
-          console.log(error);
-      });
+        axios.post('http://localhost:3000/condamnation', cond)
+        .then(function (response) {
+            res.redirect('/condamnation');
+        })
     })
-    .catch(function (error) {
-        console.log(error);
-    });
 })
 
 //appelle la page pour créer une condamnation
 app.get('/deciderReductionPeine', function (req, res) {
-  axios.get('http://localhost:3000/detenu')
-  .then(response => {
-      const detenus = response.data;
-      res.render("reductionPeine.ejs", {detenus: detenus});
-  })
-  .catch(function (error) {
-      console.log(error);
-  });
+    axios.get('http://localhost:3000/detenu')
+    .then(response => {
+        const detenus = response.data;
+        res.render("reductionPeine.ejs", {detenus: detenus});
+    })
 })
 
 //créer une decision puis une condamnation
 app.post('/deciderReductionPeine', function (req, res) {
-    const newL = req.body;
-    let decision = {n_type_decision : "2", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision};
-    let lib = {n_type_decision : "2", n_ecrou : newL.n_ecrou, date_decision : newL.date_decision, duree : newL.duree};
+    const newR = req.body;
+    const decision = {n_type_decision : "2", n_ecrou : newR.n_ecrou, date_decision : newR.date_decision};
+    const redPei = {n_type_decision : "2", n_ecrou : newR.n_ecrou, date_decision : newR.date_decision, duree : newR.duree};
     axios.post('http://localhost:3000/decision', decision)
     .then(function (response) {
-      axios.post('http://localhost:3000/reductionPeine', lib)
-      .then(function (response) {
-          res.redirect('/reductionPeine');
-      })
-      .catch(function (error) {
-          console.log(error);
-      });
+        axios.post('http://localhost:3000/reductionPeine', redPei)
+        .then(function (response) {
+            res.redirect('/reductionPeine');
+        })
     })
-    .catch(function (error) {
-        console.log(error);
-    });
 })
 
 
