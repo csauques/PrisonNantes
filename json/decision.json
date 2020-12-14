@@ -1,12 +1,13 @@
-[
-    {
-        "n_type_decision":"1",
-        "n_ecrou": "1963",
-        "date_decision": new Date("<2006-11-22>")
-    },
-    {
-        "n_type_decision":"3",
-        "n_ecrou": "1964",
-        "date_decision": new Date("<2006-11-23>")
-    }
-]
+var creatingDate = new Date('2006-11-22T00:00:00Z');
+db.Decision.insertOne({
+    "n_type_decision":"1",
+    "n_ecrou": "1963",
+    "date_decision": creatingDate
+});
+
+var creatingDate = new Date('2006-11-23T00:00:00Z');
+db.Decision.insertOne({
+    "n_type_decision":"3",
+    "n_ecrou": "1964",
+    "date_decision": creatingDate
+});

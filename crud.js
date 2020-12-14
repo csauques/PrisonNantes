@@ -2,7 +2,6 @@ module.exports = {
     readAll : function(db, nomCol, res) {
         const collection = db.collection(nomCol);
         collection.find({}).toArray(function(err, result) {
-            console.log(result);
             res.send(result);
         });
     },
@@ -11,7 +10,6 @@ module.exports = {
         const collection = db.collection(nomCol);
         let result;
         collection.find(id).toArray(function(err, result) {
-            console.log(result);
             res.send(result);
         });
     },
