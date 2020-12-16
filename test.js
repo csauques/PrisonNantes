@@ -32,7 +32,7 @@ switch (myArgs[0]) {
         });
         break;
     case 'delete':
-        axios.delete('http://localhost:3000/detenu/1234')
+        axios.delete('http://localhost:3000/detenu/1963')
         .then(function (response) {
             console.log(response);
         })

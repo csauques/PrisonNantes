@@ -35,8 +35,10 @@ app.get('/detenu', function (req, res) {
 //Page pour lire les données d'un detenu selon son id
 app.get('/detenu/:id', function (req, res) {
     const id = req.params.id;
-    const texte_id = "{ n_ecrou : " + id + " }";
-    crud.read(db, 'Detenu', texte_id, res);
+    const texte_id = "n_ecrou : \"" + id + "\" ";
+    db.collection('Detenu').findOne({n_ecrou : id}, function(err, result) {
+        res.send(result);
+    });
 })
 
 //Permet de créer un detenu
@@ -55,7 +57,7 @@ app.post('/detenu', function (req, res) {
 //Permet de modifier un detenu selon l'id
 app.put('/detenu/:id', function (req,res) {
     const id = req.params.id;
-    const texte_id = "{ n_ecrou : " + id + " }";
+    const texte_id = "{ n_ecrou : " + id + "}";
     const newDetenu = req.body;
     crud.update(db, 'Detenu', newDetenu, texte_id);
     res.send("Reussi à modifier un detenu");
@@ -162,6 +164,14 @@ app.get('/incarceration', function (req, res) {
     crud.readAll(db, 'Incarceration', res);
 })
 
+//Page pour lire les données d'une incarceration selon detenu et affaire
+app.get('/motif/:idDet/:idAff', function (req, res) {
+    const idDet = req.params.idDet;
+    const idAff = req.params.idAff;
+    const texte_id = "{ n_ecrou : " + idDet + ", n_affaire :" + idAff + " }";
+    crud.read(db, 'Motif', texte_id, res);
+})
+
 //Permet de créer une incarceration
 app.post('/incarceration', function (req, res) {
     const newInc = req.body;
@@ -181,11 +191,26 @@ app.get('/decision', function (req, res) {
     crud.readAll(db, 'Decision', res);
 })
 
+//Page pour lire les données d'une incarceration selon detenu et date
+app.get('/motif/:idDet/:date', function (req, res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    const texte_id = "{ n_ecrou : " + idDet + ", date_decision :" + date + " }";
+    crud.read(db, 'Motif', texte_id, res);
+})
+
 //Permet de créer une decision
 app.post('/decision', function (req, res) {
     const newDecision = req.body;
-    crud.create(db, 'Decision', newDecision);
-    res.send("Reussi à créer un decision");
+    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "required": ["n_type_decision", "n_ecrou", "date_decision"]};
+    var vali = v.validate(newDecision, schema);
+    if(vali.valid){
+        crud.create(db, 'Decision', newDecision);
+        res.send("Reussi à créer un decision");
+    }else{
+        res.send("Faux");
+    }
+
 })
 
 

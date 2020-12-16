@@ -8,7 +8,7 @@ module.exports = {
 
     read : function(db, nomCol, id, res) {
         const collection = db.collection(nomCol);
-        collection.find(id).toArray(function(err, result) {
+        collection.findOne(id, function(err, result) {
             res.send(result);
         });
     },
