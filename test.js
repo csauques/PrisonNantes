@@ -5,9 +5,11 @@ console.log('myArgs: ', myArgs);
 switch (myArgs[0]) {
     case 'post':
         axios.post('http://localhost:3000/detenu', {
-            n_ecrou: "1234",
+            n_ecrou: "1963",
             prenom: 'Fred',
-            nom: 'Flintstone'
+            nom: 'Flintstone',
+            date_naissance : "15/06/1998",
+            lieu_naissance : "Pau"
         })
         .then(function (response) {
             console.log(response);

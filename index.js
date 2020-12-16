@@ -4,6 +4,8 @@ const express = require('express'),
     port    = parseInt(process.env.PORT, 10) || 3000;
 const bodyParser = require('body-parser');
 const axios = require('axios');
+const Validator = require('jsonschema').Validator;
+var v = new Validator();
 
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017';
@@ -40,8 +42,14 @@ app.get('/detenu/:id', function (req, res) {
 //Permet de créer un detenu
 app.post('/detenu', function (req, res) {
     const newDetenu = req.body;
-    crud.create(db, 'Detenu', newDetenu);
-    res.send("Reussi à inserer un detenu");
+    var schema = {"n_ecrou": "string", "prenom": "string", "nom": "string", "date_naissance": "string", "lieu_naissance": "string", "required": ["n_ecrou", "nom", "prenom", "date_naissance", "lieu_naissance"]};
+    var vali = v.validate(newDetenu, schema);
+    if(vali.valid){
+        crud.create(db, 'Detenu', newDetenu);
+        res.send("Reussi à inserer un detenu");
+    }else{
+        res.send("Format du detenu mauvais");
+    }
 })
 
 //Permet de modifier un detenu selon l'id
@@ -77,8 +85,14 @@ app.get('/affaire/:id', function (req, res) {
 //Permet de créer une affaire
 app.post('/affaire', function (req, res) {
     const newAffaire = req.body;
-    crud.create(db, 'Affaire', newAffaire);
-    res.send("Reussi à créer une affaire");
+    var schema = {"n_affaire": "string", "nom_juridiction": "string", "date_faits": "string", "required": ["n_affaire", "nom_juridiction", "date_faits"]};
+    var vali = v.validate(newAffaire, schema);
+    if(vali.valid){
+        crud.create(db, 'Affaire', newAffaire);
+        res.send("Reussi à créer une affaire");
+    }else{
+        res.send("Faux");
+    }
 })
 
 //Permet de modifier une affaire selon l'id
@@ -114,8 +128,15 @@ app.get('/motif/:id', function (req, res) {
 //Permet de créer un motif
 app.post('/motif', function (req, res) {
     const newMotif = req.body;
-    crud.create(db, 'Motif', newMotif);
-    res.send("Reussi à créer un motif");
+    var schema = {"n_motif": "string", "libelle_motif": "string", "required": ["n_motif", "libelle_motif"]};
+    var vali = v.validate(newMotif, schema);
+    if(vali.valid){
+        crud.create(db, 'Motif', newMotif);
+        res.send("Reussi à créer un motif");
+    }else{
+        res.send("Faux");
+    }
+
 })
 
 //Permet de modifier un motif selon l'id
@@ -144,8 +165,14 @@ app.get('/incarceration', function (req, res) {
 //Permet de créer une incarceration
 app.post('/incarceration', function (req, res) {
     const newInc = req.body;
-    crud.create(db, 'Incarceration', newInc);
-    res.send("Reussi à créer une incarceration");
+    var schema = {"n_ecrou": "string", "n_affaire": "string", "nom_juridiction": "string", "date_incarceration": "string", "n_motif" : "string", "required": ["n_ecrou", "n_affaire", "nom_juridiction", "date_incarceration", "n_motif"]};
+    var vali = v.validate(newInc, schema);
+    if(vali.valid){
+        crud.create(db, 'Incarceration', newInc);
+        res.send("Reussi à créer une incarceration");
+    }else{
+        res.send("Faux");
+    }
 })
 
 // --------Decision
@@ -171,8 +198,14 @@ app.get('/liberationDefinitive', function (req, res) {
 //Permet de créer une liberation definitive
 app.post('/liberationDefinitive', function (req, res) {
     const newLB = req.body;
-    crud.create(db, 'LiberationDefinitive', newLB);
-    res.send("Reussi à créer une libération définitive");
+    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "date_liberation": "string", "required": ["n_type_decision", "n_ecrou", "date_decision", "date_liberation"]};
+    var vali = v.validate(newLB, schema);
+    if(vali.valid){
+        crud.create(db, 'LiberationDefinitive', newLB);
+        res.send("Reussi à créer une libération définitive");
+    }else{
+        res.send("Faux");
+    }
 })
 
 // --------Condamnation
@@ -184,8 +217,14 @@ app.get('/condamnation', function (req, res) {
 //Permet de créer une condamnation
 app.post('/condamnation', function (req, res) {
     const newCond = req.body;
-    crud.create(db, 'Condamnation', newCond);
-    res.send("Reussi à créer une condamnation");
+    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "duree": "string", "required": ["n_type_decision", "n_ecrou", "date_decision", "duree"]};
+    var vali = v.validate(newCond, schema);
+    if(vali.valid){
+        crud.create(db, 'Condamnation', newCond);
+        res.send("Reussi à créer une condamnation");
+    }else{
+        res.send("Faux");
+    }
 })
 
 // --------Reduction Peine
@@ -197,8 +236,14 @@ app.get('/reductionPeine', function (req, res) {
 //Permet de créer une reduction de peine
 app.post('/reductionPeine', function (req, res) {
     const newRP = req.body;
-    crud.create(db, 'ReductionPeine', newRP);
-    res.send("Reussi à créer une réduction de peine");
+    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "duree": "string", "required": ["n_type_decision", "n_ecrou", "date_decision", "duree"]};
+    var vali = v.validate(newRP, schema);
+    if(vali.valid){
+        crud.create(db, 'ReductionPeine', newRP);
+        res.send("Reussi à créer une réduction de peine");
+    }else{
+        res.send("Faux");
+    }
 })
 
 // --------Detenu Affaire
@@ -209,9 +254,15 @@ app.get('/detenuAffaire', function (req, res) {
 
 //Permet de créer un detenu et affaire
 app.post('/detenuAffaire', function (req, res) {
-    const newRP = req.body;
-    crud.create(db, 'DetenuAffaire', newRP);
-    res.send("Reussi à créer un detenu et affaire");
+    const newDA = req.body;
+    var schema = {"n_ecrou": "string", "n_affaire": "string", "nom_juridiction": "string", "required": ["n_ecrou", "n_affaire", "nom_juridiction"]};
+    var vali = v.validate(newDA, schema);
+    if(vali.valid){
+        crud.create(db, 'DetenuAffaire', newDA);
+        res.send("Reussi à créer un detenu et affaire");
+    }else{
+        res.send("Faux");
+    }
 })
 
 
@@ -283,7 +334,6 @@ app.post('/incarcerer/:idDet/affaire/:idAff/motif', function (req, res) {
     }else{
         const now = new Date();
         const texte_now = (('0'+now.getDate()   ).slice(-2)) + "/" + (('0'+now.getMonth()+1).slice(-2)) + "/" + now.getFullYear();
-        console.log(now.getDate());
         let incarcerer = {n_ecrou : idDet, n_affaire : idAff, nom_juridiction : "Nantes", date_incarceration : texte_now, motif : motif.n_motif };
         axios.post('http://localhost:3000/incarceration', incarcerer)
         .then(function (response) {
@@ -301,7 +351,6 @@ app.post('/incarcerer/:idDet/affaire/:idAff/newMotif', function (req, res) {
     .then(function (response) {
         const now = new Date();
         const texte_now = (('0'+now.getDate()   ).slice(-2)) + "/" + (('0'+now.getMonth()+1).slice(-2)) + "/" + now.getFullYear();
-        console.log(now.getDate());
         let incarcerer = {n_ecrou : idDet, n_affaire : idAff, nom_juridiction : "Nantes", date_incarceration : texte_now, motif : newMotif.n_motif };
         axios.post('http://localhost:3000/incarceration', incarcerer)
         .then(function (response) {
@@ -396,7 +445,6 @@ app.get('/preventive', function (req, res) {
     ]).toArray(function(err, result){
         let detenuPreventive = [];
         if (err) throw err;
-        //console.log(result);
         result.forEach((det) => {
             if (det.affaire.length == 0) {
                 detenuPreventive.push(det);
