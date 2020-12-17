@@ -247,10 +247,16 @@ app.post('/incarceration', function (req, res) {
                             if (result3 != null){
                                 db.collection('Incarceration').insertOne(newInc);
                                 res.send("Reussi à créer une incarceration");
+                            }else{
+                                res.send("Motif inexistant");
                             }
                         });
+                    }else{
+                        res.send("Affaire inexistant");
                     }
                 });
+            }else{
+                res.send("Detenu inexistant");
             }
         });
     }else{
@@ -340,6 +346,8 @@ app.post('/decision', function (req, res) {
             if (result1 != null){
                 db.collection('Decision').insertOne(newDecision);
                 res.send("Reussi à créer un decision");
+            }else{
+                res.send("Pas de detenu");
             }
         });
     }else{
@@ -415,6 +423,8 @@ app.post('/liberationDefinitive', function (req, res) {
             if (result1 != null){
                 db.collection('LiberationDefinitive').insertOne(newLB);
                 res.send("Reussi à créer une libération définitive");
+            }else{
+                res.send("Pas de detenu");
             }
         });
     }else{
@@ -490,6 +500,8 @@ app.post('/condamnation', function (req, res) {
             if (result1 != null){
                 db.collection('Condamnation').insertOne(newCond);
                 res.send("Reussi à créer une condamnation");
+            }else {
+                res.send("Pas de detenu");
             }
         });
     }else{
@@ -565,6 +577,8 @@ app.post('/reductionPeine', function (req, res) {
             if (result1 != null){
                 db.collection('ReductionPeine').insertOne(newRP);
                 res.send("Reussi à créer une réduction de peine");
+            }else {
+                res.send("Pas de detenu");
             }
         });
     }else{
@@ -641,8 +655,12 @@ app.post('/detenuAffaire', function (req, res) {
                     if (result2 != null){
                         db.collection('DetenuAffaire').insertOne(newDA);
                         res.send("Reussi à créer un detenu et affaire");
+                    }else {
+                        res.send("Pas d'affaire");
                     }
                 });
+            }else {
+                res.send("Pas de detenu");
             }
         });
     }else{

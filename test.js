@@ -1,7 +1,8 @@
 const axios = require('axios');
 var myArgs = process.argv.slice(2);
-console.log('myArgs: ', myArgs);
 const fs = require('fs');
+
+console.log('myArgs: ', myArgs);
 
 switch (myArgs[0]) {
     case 'post':
@@ -37,5 +38,5 @@ switch (myArgs[0]) {
             console.log(error);
         });
     default:
-        console.log('Option inexistance');
+        console.log('Option inexistante');
 }
