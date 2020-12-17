@@ -6,20 +6,22 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 
 const Ajv = require("ajv").default;
-const ajv = new Ajv({ allErrors:true, removeAdditional:'all' });
-
-const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://localhost:27017';
-const dbName = 'Prison';
-let db;
+const ajv = new Ajv({ removeAdditional:'all' });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-MongoClient.connect(url, function(err, client) {
-    console.log("Connecté à la base de données de la prison");
-    db = client.db(dbName);
+let db;
+
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://user:1234@cluster0.xqhbg.mongodb.net/Prison?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+    db = client.db('Prison');
 });
+
+
+
 
 //Page d'accueil
 app.get('/', function (req, res) {
