@@ -1,6 +1,5 @@
-
-db.Affaire.insertOne({
+{
     "n_affaire":"44",
     "nom_juridiction": "Nantes",
     "date_faits": "17/12/1995"
-});
+}

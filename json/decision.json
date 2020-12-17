@@ -1,12 +1,6 @@
 
-db.Decision.insertOne({
+{
     "n_type_decision":"1",
     "n_ecrou": "1963",
     "date_decision": "22/11/2006"
-});
-
-db.Decision.insertOne({
-    "n_type_decision":"3",
-    "n_ecrou": "1964",
-    "date_decision": "23/11/2006"
-});
+}

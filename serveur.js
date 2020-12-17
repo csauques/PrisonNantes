@@ -4,8 +4,9 @@ const express = require('express'),
     port    = parseInt(process.env.PORT, 10) || 3000;
 const bodyParser = require('body-parser');
 const axios = require('axios');
-const Validator = require('jsonschema').Validator;
-var v = new Validator();
+
+const Ajv = require("ajv").default;
+const ajv = new Ajv({ allErrors:true, removeAdditional:'all' });
 
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017';
@@ -45,9 +46,16 @@ app.get('/detenu/:id', function (req, res) {
 //Permet de créer un detenu
 app.post('/detenu', function (req, res) {
     const newDetenu = req.body;
-    var schema = {"n_ecrou": "string", "prenom": "string", "nom": "string", "date_naissance": "string", "lieu_naissance": "string", "required": ["n_ecrou", "nom", "prenom", "date_naissance", "lieu_naissance"]};
-    var vali = v.validate(newDetenu, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_ecrou": {"type": "string"},
+        "prenom": {"type": "string"},
+        "nom": {"type": "string"},
+        "date_naissance": {"type": "string"},
+        "lieu_naissance": {"type": "string"}
+        },
+        "required": ["n_ecrou", "nom", "prenom", "date_naissance", "lieu_naissance"]};
+    const valid = ajv.validate(schema, newDetenu);
+    if(valid){
         db.collection('Detenu').insertOne(newDetenu);
         res.send("Reussi à inserer un detenu");
     }else{
@@ -59,9 +67,15 @@ app.post('/detenu', function (req, res) {
 app.put('/detenu/:id', function (req,res) {
     const id = req.params.id;
     const newDetenu = req.body;
-    var schema = {"n_ecrou": "string", "prenom": "string", "nom": "string", "date_naissance": "string", "lieu_naissance": "string"};
-    var vali = v.validate(newDetenu, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_ecrou": {"type": "string"},
+        "prenom": {"type": "string"},
+        "nom": {"type": "string"},
+        "date_naissance": {"type": "string"},
+        "lieu_naissance": {"type": "string"}
+    }};
+    const valid = ajv.validate(schema, newDetenu);
+    if(valid){
         db.collection('Detenu').updateOne({n_ecrou : id}, {$set: newDetenu});
         res.send("Reussi à modifier un detenu");
     }else{
@@ -96,9 +110,14 @@ app.get('/affaire/:id', function (req, res) {
 //Permet de créer une affaire
 app.post('/affaire', function (req, res) {
     const newAffaire = req.body;
-    var schema = {"n_affaire": "string", "nom_juridiction": "string", "date_faits": "string", "required": ["n_affaire", "nom_juridiction", "date_faits"]};
-    var vali = v.validate(newAffaire, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_affaire": {"type": "string"},
+        "nom_juridiction": {"type": "string"},
+        "date_faits": {"type": "string"}
+        },
+        "required": ["n_affaire", "nom_juridiction", "date_faits"]};
+    const valid = ajv.validate(schema, newAffaire);
+    if(valid){
         db.collection('Affaire').insertOne(newAffaire);
         res.send("Reussi à créer une affaire");
     }else{
@@ -110,9 +129,13 @@ app.post('/affaire', function (req, res) {
 app.put('/affaire/:id', function (req,res) {
     const id = req.params.id;
     const newAffaire = req.body;
-    var schema = {"n_affaire": "string", "nom_juridiction": "string", "date_faits": "string"};
-    var vali = v.validate(newAffaire, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_affaire": {"type": "string"},
+        "nom_juridiction": {"type": "string"},
+        "date_faits": {"type": "string"}
+    }};
+    const valid = ajv.validate(schema, newAffaire);
+    if(valid){
         db.collection('Affaire').updateOne({n_affaire : id}, {$set: newAffaire});
         res.send("Reussi à modifier une affaire");
     }else{
@@ -146,9 +169,13 @@ app.get('/motif/:id', function (req, res) {
 //Permet de créer un motif
 app.post('/motif', function (req, res) {
     const newMotif = req.body;
-    var schema = {"n_motif": "string", "libelle_motif": "string", "required": ["n_motif", "libelle_motif"]};
-    var vali = v.validate(newMotif, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_motif": {"type": "string"},
+        "libelle_motif": {"type": "string"}
+        },
+        "required": ["n_motif", "libelle_motif"]};
+    const valid = ajv.validate(schema, newMotif);
+    if(valid){
         db.collection('Motif').insertOne(newMotif);
         res.send("Reussi à créer un motif");
     }else{
@@ -160,9 +187,12 @@ app.post('/motif', function (req, res) {
 app.put('/motif/:id', function (req,res) {
     const id = req.params.id;
     const newMotif = req.body;
-    var schema = {"n_motif": "string", "libelle_motif": "string"};
-    var vali = v.validate(newMotif, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_motif": {"type": "string"},
+        "libelle_motif": {"type": "string"}
+    }};
+    const valid = ajv.validate(schema, newMotif);
+    if(valid){
         db.collection('Motif').updateOne({n_motif : id}, {$set: newMotif});
         res.send("Reussi à modifier un motif");
     }else{
@@ -173,7 +203,6 @@ app.put('/motif/:id', function (req,res) {
 //Permet de supprimer un motif selon l'id
 app.delete('/motif/:id', function (req,res) {
     const id = req.params.id;
-    const texte_id = "{ n_motif : " + id + " }";
     db.collection('Motif').deleteOne({n_motif : id});
     res.send("Reussi à supprimer un motif");
 })
@@ -198,9 +227,16 @@ app.get('/incarceration/:idDet/:idAff', function (req, res) {
 //Permet de créer une incarceration
 app.post('/incarceration', function (req, res) {
     const newInc = req.body;
-    var schema = {"n_ecrou": "string", "n_affaire": "string", "nom_juridiction": "string", "date_incarceration": "string", "n_motif" : "string", "required": ["n_ecrou", "n_affaire", "nom_juridiction", "date_incarceration", "n_motif"]};
-    var vali = v.validate(newInc, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_ecrou": {"type": "string"},
+        "n_affaire": {"type": "string"},
+        "nom_juridiction": {"type": "string"},
+        "date_incarceration": {"type": "string"},
+        "n_motif": {"type": "string"}
+        },
+        "required": ["n_ecrou", "n_affaire", "nom_juridiction", "date_incarceration", "n_motif"]};
+    const valid = ajv.validate(schema, newInc);
+    if(valid){
         db.collection('Incarceration').insertOne(newInc);
         res.send("Reussi à créer une incarceration");
     }else{
@@ -213,9 +249,15 @@ app.put('/incarceration/:idDet/:idAff', function (req,res) {
     const idDet = req.params.idDet;
     const idAff = req.params.idAff;
     const newInc = req.body;
-    var schema = {"n_ecrou": "string", "n_affaire": "string", "nom_juridiction": "string", "date_incarceration": "string", "n_motif" : "string"};
-    var vali = v.validate(newInc, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_ecrou": {"type": "string"},
+        "n_affaire": {"type": "string"},
+        "nom_juridiction": {"type": "string"},
+        "date_incarceration": {"type": "string"},
+        "n_motif": {"type": "string"}
+    };
+    const valid = ajv.validate(schema, newInc);
+    if(valid){
         db.collection('Incarceration').updateOne({n_ecrou : idDet, n_affaire : idAff}, {$set: newInc});
         res.send("Reussi à modifier une incarceration");
     }else{
@@ -240,9 +282,9 @@ app.get('/decision', function (req, res) {
 })
 
 //Page pour lire les données d'une incarceration selon detenu et date
-app.get('/decision/:idDet/:date', function (req, res) {
+app.get('/decision/:idDet/:jdate/:mdate/:adate', function (req, res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     db.collection('Decision').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
         res.send(result);
     });
@@ -251,9 +293,14 @@ app.get('/decision/:idDet/:date', function (req, res) {
 //Permet de créer une decision
 app.post('/decision', function (req, res) {
     const newDecision = req.body;
-    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "required": ["n_type_decision", "n_ecrou", "date_decision"]};
-    var vali = v.validate(newDecision, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_type_decision": {"type": "string"},
+        "n_ecrou": {"type": "string"},
+        "date_decision": {"type": "string"}
+        },
+        "required": ["n_type_decision", "n_ecrou", "date_decision"]};
+    const valid = ajv.validate(schema, newDecision);
+    if(valid){
         db.collection('Decision').insertOne(newDecision);
         res.send("Reussi à créer un decision");
     }else{
@@ -262,13 +309,17 @@ app.post('/decision', function (req, res) {
 })
 
 //Permet de modifier une decision selon l'id de detenu et affaire
-app.put('/decision/:idDet/:date', function (req,res) {
+app.put('/decision/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     const newDecision = req.body;
-    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string"};
-    var vali = v.validate(newDecision, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_type_decision": {"type": "string"},
+        "n_ecrou": {"type": "string"},
+        "date_decision": {"type": "string"}
+    };
+    const valid = ajv.validate(schema, newDecision);
+    if(valid){
         db.collection('Decision').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newDecision});
         res.send("Reussi à modifier une incarceration");
     }else{
@@ -277,9 +328,9 @@ app.put('/decision/:idDet/:date', function (req,res) {
 })
 
 //Permet de supprimer une decision selon l'id
-app.delete('/decision/:idDet/:date', function (req,res) {
+app.delete('/decision/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     db.collection('Decision').deleteOne({n_ecrou : idDet, date_decision : date});
     res.send("Reussi à supprimer une incarceration");
 })
@@ -294,9 +345,9 @@ app.get('/liberationDefinitive', function (req, res) {
 })
 
 //Page pour lire les données d'une liberation definitive selon detenu et date
-app.get('/liberationDefinitive/:idDet/:date', function (req, res) {
+app.get('/liberationDefinitive/:idDet/:jdate/:mdate/:adate', function (req, res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     db.collection('LiberationDefinitive').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
         res.send(result);
     });
@@ -305,9 +356,15 @@ app.get('/liberationDefinitive/:idDet/:date', function (req, res) {
 //Permet de créer une liberation definitive
 app.post('/liberationDefinitive', function (req, res) {
     const newLB = req.body;
-    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "date_liberation": "string", "required": ["n_type_decision", "n_ecrou", "date_decision", "date_liberation"]};
-    var vali = v.validate(newLB, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_type_decision": {"type": "string"},
+        "n_ecrou": {"type": "string"},
+        "date_decision": {"type": "string"},
+        "date_liberation": {"type": "string"}
+        },
+        "required": ["n_type_decision", "n_ecrou", "date_decision", "date_liberation"]};
+    const valid = ajv.validate(schema, newLB);
+    if(valid){
         db.collection('LiberationDefinitive').insertOne(newLB);
         res.send("Reussi à créer une libération définitive");
     }else{
@@ -316,13 +373,18 @@ app.post('/liberationDefinitive', function (req, res) {
 })
 
 //Permet de modifier une liberation definitive selon l'id de detenu et affaire
-app.put('/liberationDefinitive/:idDet/:date', function (req,res) {
+app.put('/liberationDefinitive/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     const newLB = req.body;
-    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "date_liberation": "string"};
-    var vali = v.validate(newLB, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_type_decision": {"type": "string"},
+        "n_ecrou": {"type": "string"},
+        "date_decision": {"type": "string"},
+        "date_liberation": {"type": "string"}
+    };
+    const valid = ajv.validate(schema, newLB);
+    if(valid){
         db.collection('LiberationDefinitive').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newLB});
         res.send("Reussi à modifier une liberation definitive");
     }else{
@@ -331,9 +393,9 @@ app.put('/liberationDefinitive/:idDet/:date', function (req,res) {
 })
 
 //Permet de supprimer une liberation definitive selon l'id
-app.delete('/liberationDefinitive/:idDet/:date', function (req,res) {
+app.delete('/liberationDefinitive/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     db.collection('LiberationDefinitive').deleteOne({n_ecrou : idDet, date_decision : date});
     res.send("Reussi à supprimer une liberation definitive");
 })
@@ -347,9 +409,9 @@ app.get('/condamnation', function (req, res) {
 })
 
 //Page pour lire les données d'une condamntion selon detenu et date
-app.get('/condamnation/:idDet/:date', function (req, res) {
+app.get('/condamnation/:idDet/:jdate/:mdate/:adate', function (req, res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     db.collection('Condamnation').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
         res.send(result);
     });
@@ -358,9 +420,15 @@ app.get('/condamnation/:idDet/:date', function (req, res) {
 //Permet de créer une condamnation
 app.post('/condamnation', function (req, res) {
     const newCond = req.body;
-    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "duree": "string", "required": ["n_type_decision", "n_ecrou", "date_decision", "duree"]};
-    var vali = v.validate(newCond, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_type_decision": {"type": "string"},
+        "n_ecrou": {"type": "string"},
+        "date_decision": {"type": "string"},
+        "duree": {"type": "string"}
+        },
+        "required": ["n_type_decision", "n_ecrou", "date_decision", "duree"]};
+    const valid = ajv.validate(schema, newCond);
+    if(valid){
         db.collection('Condamnation').insertOne(newCond);
         res.send("Reussi à créer une condamnation");
     }else{
@@ -369,13 +437,18 @@ app.post('/condamnation', function (req, res) {
 })
 
 //Permet de modifier une condamnation selon l'id de detenu et affaire
-app.put('/condamnation/:idDet/:date', function (req,res) {
+app.put('/condamnation/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     const newCond = req.body;
-    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "duree": "string"};
-    var vali = v.validate(newCond, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_type_decision": {"type": "string"},
+        "n_ecrou": {"type": "string"},
+        "date_decision": {"type": "string"},
+        "duree": {"type": "string"}
+    };
+    const valid = ajv.validate(schema, newCond);
+    if(valid){
         db.collection('Condamnation').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newCond});
         res.send("Reussi à modifier une condamnation");
     }else{
@@ -384,9 +457,9 @@ app.put('/condamnation/:idDet/:date', function (req,res) {
 })
 
 //Permet de supprimer une condamnation selon l'id
-app.delete('/condamnation/:idDet/:date', function (req,res) {
+app.delete('/condamnation/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     db.collection('Condamnation').deleteOne({n_ecrou : idDet, date_decision : date});
     res.send("Reussi à supprimer une condamnation");
 })
@@ -400,9 +473,9 @@ app.get('/reductionPeine', function (req, res) {
 })
 
 //Page pour lire les données d'une reductions de peine selon detenu et date
-app.get('/reductionPeine/:idDet/:date', function (req, res) {
+app.get('/reductionPeine/:idDet/:jdate/:mdate/:adate', function (req, res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     db.collection('ReductionPeine').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
         res.send(result);
     });
@@ -411,9 +484,15 @@ app.get('/reductionPeine/:idDet/:date', function (req, res) {
 //Permet de créer une reduction de peine
 app.post('/reductionPeine', function (req, res) {
     const newRP = req.body;
-    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "duree": "string", "required": ["n_type_decision", "n_ecrou", "date_decision", "duree"]};
-    var vali = v.validate(newRP, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_type_decision": {"type": "string"},
+        "n_ecrou": {"type": "string"},
+        "date_decision": {"type": "string"},
+        "duree": {"type": "string"}
+        },
+        "required": ["n_type_decision", "n_ecrou", "date_decision", "duree"]};
+    const valid = ajv.validate(schema, newDetenu);
+    if(valid){
         db.collection('ReductionPeine').insertOne(newRP);
         res.send("Reussi à créer une réduction de peine");
     }else{
@@ -422,13 +501,18 @@ app.post('/reductionPeine', function (req, res) {
 })
 
 //Permet de modifier une reductionPeine selon l'id de detenu et affaire
-app.put('/reductionPeine/:idDet/:date', function (req,res) {
+app.put('/reductionPeine/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     const newRP = req.body;
-    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "duree": "string"};
-    var vali = v.validate(newRP, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_type_decision": {"type": "string"},
+        "n_ecrou": {"type": "string"},
+        "date_decision": {"type": "string"},
+        "duree": {"type": "string"}
+    };
+    const valid = ajv.validate(schema, newRP);
+    if(valid){
         db.collection('ReductionPeine').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newRP});
         res.send("Reussi à modifier une reductionPeine");
     }else{
@@ -437,9 +521,9 @@ app.put('/reductionPeine/:idDet/:date', function (req,res) {
 })
 
 //Permet de supprimer une reductionPeine selon l'id
-app.delete('/reductionPeine/:idDet/:date', function (req,res) {
+app.delete('/reductionPeine/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.date;
+    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
     db.collection('ReductionPeine').deleteOne({n_ecrou : idDet, date_decision : date});
     res.send("Reussi à supprimer une reductionPeine");
 })
@@ -464,9 +548,14 @@ app.get('/detenuAffaire/:idDet/:idAff', function (req, res) {
 //Permet de créer un detenu et affaire
 app.post('/detenuAffaire', function (req, res) {
     const newDA = req.body;
-    var schema = {"n_ecrou": "string", "n_affaire": "string", "nom_juridiction": "string", "required": ["n_ecrou", "n_affaire", "nom_juridiction"]};
-    var vali = v.validate(newDA, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_ecrou": {"type": "string"},
+        "n_affaire": {"type": "string"},
+        "nom_juridiction": {"type": "string"}
+        },
+        "required": ["n_ecrou", "n_affaire", "nom_juridiction"]};
+    const valid = ajv.validate(schema, newDA);
+    if(valid){
         db.collection('DetenuAffaire').insertOne(newDA);
         res.send("Reussi à créer un detenu et affaire");
     }else{
@@ -479,9 +568,13 @@ app.put('/detenuAffaire/:idDet/:idAff', function (req,res) {
     const idDet = req.params.idDet;
     const idAff = req.params.idAff;
     const newDA = req.body;
-    var schema = {"n_ecrou": "string", "n_affaire": "string", "nom_juridiction": "string"};
-    var vali = v.validate(newDA, schema);
-    if(vali.valid){
+    var schema = {"properties" : {
+        "n_ecrou": {"type": "string"},
+        "n_affaire": {"type": "string"},
+        "nom_juridiction": {"type": "string"}
+    };
+    const valid = ajv.validate(schema, newDA);
+    if(valid){
         db.collection('DetenuAffaire').updateOne({n_ecrou : idDet, n_affaire : idAff}, {$set: newDA});
         res.send("Reussi à modifier une DetenuAffaire");
     }else{
