@@ -29,13 +29,14 @@ app.get('/', function (req, res) {
 // --------Detenu
 //Page pour lire les données de tous les detenus
 app.get('/detenu', function (req, res) {
-    crud.readAll(db, 'Detenu', res);
+    db.collection('Detenu').find({}).toArray(function(err, result) {
+        res.send(result);
+    });
 })
 
 //Page pour lire les données d'un detenu selon son id
 app.get('/detenu/:id', function (req, res) {
     const id = req.params.id;
-    const texte_id = "n_ecrou : \"" + id + "\" ";
     db.collection('Detenu').findOne({n_ecrou : id}, function(err, result) {
         res.send(result);
     });
@@ -47,7 +48,7 @@ app.post('/detenu', function (req, res) {
     var schema = {"n_ecrou": "string", "prenom": "string", "nom": "string", "date_naissance": "string", "lieu_naissance": "string", "required": ["n_ecrou", "nom", "prenom", "date_naissance", "lieu_naissance"]};
     var vali = v.validate(newDetenu, schema);
     if(vali.valid){
-        crud.create(db, 'Detenu', newDetenu);
+        db.collection('Detenu').insertOne(newDetenu);
         res.send("Reussi à inserer un detenu");
     }else{
         res.send("Format du detenu mauvais");
@@ -57,31 +58,32 @@ app.post('/detenu', function (req, res) {
 //Permet de modifier un detenu selon l'id
 app.put('/detenu/:id', function (req,res) {
     const id = req.params.id;
-    const texte_id = "{ n_ecrou : " + id + "}";
     const newDetenu = req.body;
-    crud.update(db, 'Detenu', newDetenu, texte_id);
+    db.collection('Detenu').updateOne({n_ecrou : id}, {$set: newDetenu});
     res.send("Reussi à modifier un detenu");
 })
 
 //Permet de supprimer un detenu selon l'id
 app.delete('/detenu/:id', function (req,res) {
     const id = req.params.id;
-    const texte_id = "{ n_ecrou : " + id + " }";
-    crud.delete(db, 'Detenu', texte_id);
+    db.collection('Detenu').deleteOne({n_ecrou : id});
     res.send("Reussi à supprimer un detenu");
 })
 
 // --------Affaire
 //Page pour lire les données des affaires
 app.get('/affaire', function (req, res) {
-    crud.readAll(db, 'Affaire', res);
+    db.collection('Affaire').find({}).toArray(function(err, result) {
+        res.send(result);
+    });
 })
 
 //Page pour lire les données d'une affaire selon son id
 app.get('/affaire/:id', function (req, res) {
     const id = req.params.id;
-    const texte_id = "{ n_affaire : " + id + " }";
-    crud.read(db, 'Affaire', texte_id, res);
+    db.collection('Affaire').findOne({n_affaire : id}, function(err, result) {
+        res.send(result);
+    });
 })
 
 //Permet de créer une affaire
@@ -90,7 +92,7 @@ app.post('/affaire', function (req, res) {
     var schema = {"n_affaire": "string", "nom_juridiction": "string", "date_faits": "string", "required": ["n_affaire", "nom_juridiction", "date_faits"]};
     var vali = v.validate(newAffaire, schema);
     if(vali.valid){
-        crud.create(db, 'Affaire', newAffaire);
+        db.collection('Affaire').insertOne(newAffaire);
         res.send("Reussi à créer une affaire");
     }else{
         res.send("Faux");
@@ -100,31 +102,32 @@ app.post('/affaire', function (req, res) {
 //Permet de modifier une affaire selon l'id
 app.put('/affaire/:id', function (req,res) {
     const id = req.params.id;
-    const texte_id = "{ n_affaire : " + id + " }";
     const newAffaire = req.body;
-    crud.update(db, 'Affaire', newAffaire, texte_id);
+    db.collection('Affaire').updateOne({n_affaire : id}, {$set: newAffaire});
     res.send("Reussi à modifier une affaire");
 })
 
 //Permet de supprimer une affaire selon l'id
 app.delete('/affaire/:id', function (req,res) {
     const id = req.params.id;
-    const texte_id = "{ n_affaire : " + id + " }";
-    crud.delete(db, 'Affaire', texte_id);
+    db.collection('Affaire').deleteOne({n_affaire : id});
     res.send("Reussi à supprimer une affaire");
 })
 
 // --------Motif
 //Page pour lire les données des motifs
 app.get('/motif', function (req, res) {
-    crud.readAll(db, 'Motif', res);
+    db.collection('Motif').find({}).toArray(function(err, result) {
+        res.send(result);
+    });
 })
 
 //Page pour lire les données d'un motif selon son id
 app.get('/motif/:id', function (req, res) {
     const id = req.params.id;
-    const texte_id = "{ n_motif : " + id + " }";
-    crud.read(db, 'Motif', texte_id, res);
+    db.collection('Motif').findOne({n_motif : id}, function(err, result) {
+        res.send(result);
+    });
 })
 
 //Permet de créer un motif
@@ -133,7 +136,7 @@ app.post('/motif', function (req, res) {
     var schema = {"n_motif": "string", "libelle_motif": "string", "required": ["n_motif", "libelle_motif"]};
     var vali = v.validate(newMotif, schema);
     if(vali.valid){
-        crud.create(db, 'Motif', newMotif);
+        db.collection('Motif').insertOne(newMotif);
         res.send("Reussi à créer un motif");
     }else{
         res.send("Faux");
@@ -144,9 +147,8 @@ app.post('/motif', function (req, res) {
 //Permet de modifier un motif selon l'id
 app.put('/motif/:id', function (req,res) {
     const id = req.params.id;
-    const texte_id = "{ n_motif : " + id + " }";
     const newMotif = req.body;
-    crud.update(db, 'Motif', newMotif, texte_id);
+    db.collection('Motif').updateOne({n_motif : id}, {$set: newMotif});
     res.send("Reussi à modifier un motif");
 })
 
@@ -154,22 +156,25 @@ app.put('/motif/:id', function (req,res) {
 app.delete('/motif/:id', function (req,res) {
     const id = req.params.id;
     const texte_id = "{ n_motif : " + id + " }";
-    crud.delete(db, 'Motif', texte_id);
+    db.collection('Motif').deleteOne({n_motif : id});
     res.send("Reussi à supprimer un motif");
 })
 
 // --------Incarceration
 //Page pour lire les données des incarcérations
 app.get('/incarceration', function (req, res) {
-    crud.readAll(db, 'Incarceration', res);
+    db.collection('Incarceration').find({}).toArray(function(err, result) {
+        res.send(result);
+    });
 })
 
 //Page pour lire les données d'une incarceration selon detenu et affaire
-app.get('/motif/:idDet/:idAff', function (req, res) {
+app.get('/incarceration/:idDet/:idAff', function (req, res) {
     const idDet = req.params.idDet;
     const idAff = req.params.idAff;
-    const texte_id = "{ n_ecrou : " + idDet + ", n_affaire :" + idAff + " }";
-    crud.read(db, 'Motif', texte_id, res);
+    db.collection('Incarceration').findOne({n_ecrou : idDet, n_affaire : idAff}, function(err, result) {
+        res.send(result);
+    });
 })
 
 //Permet de créer une incarceration
@@ -178,25 +183,45 @@ app.post('/incarceration', function (req, res) {
     var schema = {"n_ecrou": "string", "n_affaire": "string", "nom_juridiction": "string", "date_incarceration": "string", "n_motif" : "string", "required": ["n_ecrou", "n_affaire", "nom_juridiction", "date_incarceration", "n_motif"]};
     var vali = v.validate(newInc, schema);
     if(vali.valid){
-        crud.create(db, 'Incarceration', newInc);
+        db.collection('Incarceration').insertOne(newInc);
         res.send("Reussi à créer une incarceration");
     }else{
         res.send("Faux");
     }
 })
 
+//Permet de modifier une incarceration selon l'id de detenu et affaire
+app.put('/incarceration/:idDet/:idAff', function (req,res) {
+    const idDet = req.params.idDet;
+    const idAff = req.params.idAff;
+    const newInc = req.body;
+    db.collection('Incarceration').updateOne({n_ecrou : idDet, n_affaire : idAff}, {$set: newInc});
+    res.send("Reussi à modifier une incarceration");
+})
+
+//Permet de supprimer une incarceration selon l'id
+app.delete('/incarceration/:idDet/:idAff', function (req,res) {
+    const idDet = req.params.idDet;
+    const idAff = req.params.idAff;
+    db.collection('Incarceration').deleteOne({n_ecrou : idDet, n_affaire : idAff});
+    res.send("Reussi à supprimer une incarceration");
+})
+
 // --------Decision
 //Page pour lire les données des decisions
 app.get('/decision', function (req, res) {
-    crud.readAll(db, 'Decision', res);
+    db.collection('Decision').find({}).toArray(function(err, result) {
+        res.send(result);
+    });
 })
 
 //Page pour lire les données d'une incarceration selon detenu et date
-app.get('/motif/:idDet/:date', function (req, res) {
+app.get('/decision/:idDet/:date', function (req, res) {
     const idDet = req.params.idDet;
     const date = req.params.date;
-    const texte_id = "{ n_ecrou : " + idDet + ", date_decision :" + date + " }";
-    crud.read(db, 'Motif', texte_id, res);
+    db.collection('Decision').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
+        res.send(result);
+    });
 })
 
 //Permet de créer une decision
@@ -205,19 +230,46 @@ app.post('/decision', function (req, res) {
     var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "required": ["n_type_decision", "n_ecrou", "date_decision"]};
     var vali = v.validate(newDecision, schema);
     if(vali.valid){
-        crud.create(db, 'Decision', newDecision);
+        db.collection('Decision').insertOne(newDecision);
         res.send("Reussi à créer un decision");
     }else{
         res.send("Faux");
     }
+})
 
+//Permet de modifier une decision selon l'id de detenu et affaire
+app.put('/decision/:idDet/:date', function (req,res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    const newDecision = req.body;
+    db.collection('Decision').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newDecision});
+    res.send("Reussi à modifier une incarceration");
+})
+
+//Permet de supprimer une decision selon l'id
+app.delete('/decision/:idDet/:date', function (req,res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    db.collection('Decision').deleteOne({n_ecrou : idDet, date_decision : date});
+    res.send("Reussi à supprimer une incarceration");
 })
 
 
 // --------Liberation Definitive
 //Page pour lire les données des liberations definitive
 app.get('/liberationDefinitive', function (req, res) {
-    crud.readAll(db, 'LiberationDefinitive', res);
+    db.collection('LiberationDefinitive').find({}).toArray(function(err, result) {
+        res.send(result);
+    });
+})
+
+//Page pour lire les données d'une liberation definitive selon detenu et date
+app.get('/liberationDefinitive/:idDet/:date', function (req, res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    db.collection('LiberationDefinitive').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
+        res.send(result);
+    });
 })
 
 //Permet de créer une liberation definitive
@@ -226,17 +278,45 @@ app.post('/liberationDefinitive', function (req, res) {
     var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "date_liberation": "string", "required": ["n_type_decision", "n_ecrou", "date_decision", "date_liberation"]};
     var vali = v.validate(newLB, schema);
     if(vali.valid){
-        crud.create(db, 'LiberationDefinitive', newLB);
+        db.collection('LiberationDefinitive').insertOne(newLB);
         res.send("Reussi à créer une libération définitive");
     }else{
         res.send("Faux");
     }
 })
 
+//Permet de modifier une liberation definitive selon l'id de detenu et affaire
+app.put('/liberationDefinitive/:idDet/:date', function (req,res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    const newLB = req.body;
+    db.collection('LiberationDefinitive').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newLB});
+    res.send("Reussi à modifier une liberation definitive");
+})
+
+//Permet de supprimer une liberation definitive selon l'id
+app.delete('/liberationDefinitive/:idDet/:date', function (req,res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    db.collection('LiberationDefinitive').deleteOne({n_ecrou : idDet, date_decision : date});
+    res.send("Reussi à supprimer une liberation definitive");
+})
+
 // --------Condamnation
 //Page pour lire les données des condamnations
 app.get('/condamnation', function (req, res) {
-    crud.readAll(db, 'Condamnation', res);
+    db.collection('Condamnation').find({}).toArray(function(err, result) {
+        res.send(result);
+    });
+})
+
+//Page pour lire les données d'une condamntion selon detenu et date
+app.get('/condamnation/:idDet/:date', function (req, res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    db.collection('Condamnation').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
+        res.send(result);
+    });
 })
 
 //Permet de créer une condamnation
@@ -245,17 +325,45 @@ app.post('/condamnation', function (req, res) {
     var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "duree": "string", "required": ["n_type_decision", "n_ecrou", "date_decision", "duree"]};
     var vali = v.validate(newCond, schema);
     if(vali.valid){
-        crud.create(db, 'Condamnation', newCond);
+        db.collection('Condamnation').insertOne(newCond);
         res.send("Reussi à créer une condamnation");
     }else{
         res.send("Faux");
     }
 })
 
+//Permet de modifier une condamnation selon l'id de detenu et affaire
+app.put('/condamnation/:idDet/:date', function (req,res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    const newCond = req.body;
+    db.collection('Condamnation').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newCond});
+    res.send("Reussi à modifier une condamnation");
+})
+
+//Permet de supprimer une condamnation selon l'id
+app.delete('/condamnation/:idDet/:date', function (req,res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    db.collection('Condamnation').deleteOne({n_ecrou : idDet, date_decision : date});
+    res.send("Reussi à supprimer une condamnation");
+})
+
 // --------Reduction Peine
 //Page pour lire les données des reductions de peine
 app.get('/reductionPeine', function (req, res) {
-    crud.readAll(db, 'ReductionPeine', res);
+    db.collection('ReductionPeine').find({}).toArray(function(err, result) {
+        res.send(result);
+    });
+})
+
+//Page pour lire les données d'une reductions de peine selon detenu et date
+app.get('/reductionPeine/:idDet/:date', function (req, res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    db.collection('ReductionPeine').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
+        res.send(result);
+    });
 })
 
 //Permet de créer une reduction de peine
@@ -264,17 +372,45 @@ app.post('/reductionPeine', function (req, res) {
     var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "duree": "string", "required": ["n_type_decision", "n_ecrou", "date_decision", "duree"]};
     var vali = v.validate(newRP, schema);
     if(vali.valid){
-        crud.create(db, 'ReductionPeine', newRP);
+        db.collection('ReductionPeine').insertOne(newRP);
         res.send("Reussi à créer une réduction de peine");
     }else{
         res.send("Faux");
     }
 })
 
+//Permet de modifier une reductionPeine selon l'id de detenu et affaire
+app.put('/reductionPeine/:idDet/:date', function (req,res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    const newRP = req.body;
+    db.collection('ReductionPeine').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newRP});
+    res.send("Reussi à modifier une reductionPeine");
+})
+
+//Permet de supprimer une reductionPeine selon l'id
+app.delete('/reductionPeine/:idDet/:date', function (req,res) {
+    const idDet = req.params.idDet;
+    const date = req.params.date;
+    db.collection('ReductionPeine').deleteOne({n_ecrou : idDet, date_decision : date});
+    res.send("Reussi à supprimer une reductionPeine");
+})
+
 // --------Detenu Affaire
 //Page pour lire les données des detenus et affaires
 app.get('/detenuAffaire', function (req, res) {
-    crud.readAll(db, 'DetenuAffaire', res);
+    db.collection('DetenuAffaire').find({}).toArray(function(err, result) {
+        res.send(result);
+    });
+})
+
+//Page pour lire les données d'une detenuAffaire selon detenu et date
+app.get('/detenuAffaire/:idDet/:idAff', function (req, res) {
+    const idDet = req.params.idDet;
+    const idAff = req.params.idAff;
+    db.collection('DetenuAffaire').findOne({n_ecrou : idDet, n_affaire : idAff}, function(err, result) {
+        res.send(result);
+    });
 })
 
 //Permet de créer un detenu et affaire
@@ -283,11 +419,28 @@ app.post('/detenuAffaire', function (req, res) {
     var schema = {"n_ecrou": "string", "n_affaire": "string", "nom_juridiction": "string", "required": ["n_ecrou", "n_affaire", "nom_juridiction"]};
     var vali = v.validate(newDA, schema);
     if(vali.valid){
-        crud.create(db, 'DetenuAffaire', newDA);
+        db.collection('DetenuAffaire').insertOne(newDA);
         res.send("Reussi à créer un detenu et affaire");
     }else{
         res.send("Faux");
     }
+})
+
+//Permet de modifier une incarceration selon l'id de detenu et affaire
+app.put('/detenuAffaire/:idDet/:idAff', function (req,res) {
+    const idDet = req.params.idDet;
+    const idAff = req.params.idAff;
+    const newDA = req.body;
+    db.collection('DetenuAffaire').updateOne({n_ecrou : idDet, n_affaire : idAff}, {$set: newDA});
+    res.send("Reussi à modifier une DetenuAffaire");
+})
+
+//Permet de supprimer une affaire selon l'id
+app.delete('/detenuAffaire/:idDet/:idAff', function (req,res) {
+    const idDet = req.params.idDet;
+    const idAff = req.params.idAff;
+    db.collection('DetenuAffaire').deleteOne({n_ecrou : idDet, n_affaire : idAff});
+    res.send("Reussi à supprimer une DetenuAffaire");
 })
 
 

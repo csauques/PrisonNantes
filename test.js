@@ -5,7 +5,7 @@ console.log('myArgs: ', myArgs);
 switch (myArgs[0]) {
     case 'post':
         axios.post('http://localhost:3000/detenu', {
-            n_ecrou: "1963",
+            n_ecrou: "1234",
             prenom: 'Fred',
             nom: 'Flintstone',
             date_naissance : "15/06/1998",
@@ -20,8 +20,6 @@ switch (myArgs[0]) {
         break;
     case 'put':
         axios.put('http://localhost:3000/detenu/1234', {
-            n_ecrou: "1234",
-            prenom: 'Fred',
             nom: 'Grenier'
         })
         .then(function (response) {
@@ -32,7 +30,7 @@ switch (myArgs[0]) {
         });
         break;
     case 'delete':
-        axios.delete('http://localhost:3000/detenu/1963')
+        axios.delete('http://localhost:3000/detenu/1234')
         .then(function (response) {
             console.log(response);
         })
