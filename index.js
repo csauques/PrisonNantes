@@ -1,4 +1,4 @@
-const crud = require('./crud');
+//const crud = require('./crud');
 const express = require('express'),
     app     = express(),
     port    = parseInt(process.env.PORT, 10) || 3000;
@@ -59,8 +59,15 @@ app.post('/detenu', function (req, res) {
 app.put('/detenu/:id', function (req,res) {
     const id = req.params.id;
     const newDetenu = req.body;
-    db.collection('Detenu').updateOne({n_ecrou : id}, {$set: newDetenu});
-    res.send("Reussi à modifier un detenu");
+    var schema = {"n_ecrou": "string", "prenom": "string", "nom": "string", "date_naissance": "string", "lieu_naissance": "string"};
+    var vali = v.validate(newDetenu, schema);
+    if(vali.valid){
+        db.collection('Detenu').updateOne({n_ecrou : id}, {$set: newDetenu});
+        res.send("Reussi à modifier un detenu");
+    }else{
+        res.send("Format du detenu mauvais");
+    }
+
 })
 
 //Permet de supprimer un detenu selon l'id
@@ -103,8 +110,14 @@ app.post('/affaire', function (req, res) {
 app.put('/affaire/:id', function (req,res) {
     const id = req.params.id;
     const newAffaire = req.body;
-    db.collection('Affaire').updateOne({n_affaire : id}, {$set: newAffaire});
-    res.send("Reussi à modifier une affaire");
+    var schema = {"n_affaire": "string", "nom_juridiction": "string", "date_faits": "string"};
+    var vali = v.validate(newAffaire, schema);
+    if(vali.valid){
+        db.collection('Affaire').updateOne({n_affaire : id}, {$set: newAffaire});
+        res.send("Reussi à modifier une affaire");
+    }else{
+        res.send("Faux");
+    }
 })
 
 //Permet de supprimer une affaire selon l'id
@@ -141,15 +154,20 @@ app.post('/motif', function (req, res) {
     }else{
         res.send("Faux");
     }
-
 })
 
 //Permet de modifier un motif selon l'id
 app.put('/motif/:id', function (req,res) {
     const id = req.params.id;
     const newMotif = req.body;
-    db.collection('Motif').updateOne({n_motif : id}, {$set: newMotif});
-    res.send("Reussi à modifier un motif");
+    var schema = {"n_motif": "string", "libelle_motif": "string"};
+    var vali = v.validate(newMotif, schema);
+    if(vali.valid){
+        db.collection('Motif').updateOne({n_motif : id}, {$set: newMotif});
+        res.send("Reussi à modifier un motif");
+    }else{
+        res.send("Faux");
+    }
 })
 
 //Permet de supprimer un motif selon l'id
@@ -195,8 +213,14 @@ app.put('/incarceration/:idDet/:idAff', function (req,res) {
     const idDet = req.params.idDet;
     const idAff = req.params.idAff;
     const newInc = req.body;
-    db.collection('Incarceration').updateOne({n_ecrou : idDet, n_affaire : idAff}, {$set: newInc});
-    res.send("Reussi à modifier une incarceration");
+    var schema = {"n_ecrou": "string", "n_affaire": "string", "nom_juridiction": "string", "date_incarceration": "string", "n_motif" : "string"};
+    var vali = v.validate(newInc, schema);
+    if(vali.valid){
+        db.collection('Incarceration').updateOne({n_ecrou : idDet, n_affaire : idAff}, {$set: newInc});
+        res.send("Reussi à modifier une incarceration");
+    }else{
+        res.send("Faux");
+    }
 })
 
 //Permet de supprimer une incarceration selon l'id
@@ -242,8 +266,14 @@ app.put('/decision/:idDet/:date', function (req,res) {
     const idDet = req.params.idDet;
     const date = req.params.date;
     const newDecision = req.body;
-    db.collection('Decision').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newDecision});
-    res.send("Reussi à modifier une incarceration");
+    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string"};
+    var vali = v.validate(newDecision, schema);
+    if(vali.valid){
+        db.collection('Decision').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newDecision});
+        res.send("Reussi à modifier une incarceration");
+    }else{
+        res.send("Faux");
+    }
 })
 
 //Permet de supprimer une decision selon l'id
@@ -290,8 +320,14 @@ app.put('/liberationDefinitive/:idDet/:date', function (req,res) {
     const idDet = req.params.idDet;
     const date = req.params.date;
     const newLB = req.body;
-    db.collection('LiberationDefinitive').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newLB});
-    res.send("Reussi à modifier une liberation definitive");
+    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "date_liberation": "string"};
+    var vali = v.validate(newLB, schema);
+    if(vali.valid){
+        db.collection('LiberationDefinitive').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newLB});
+        res.send("Reussi à modifier une liberation definitive");
+    }else{
+        res.send("Faux");
+    }
 })
 
 //Permet de supprimer une liberation definitive selon l'id
@@ -337,8 +373,14 @@ app.put('/condamnation/:idDet/:date', function (req,res) {
     const idDet = req.params.idDet;
     const date = req.params.date;
     const newCond = req.body;
-    db.collection('Condamnation').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newCond});
-    res.send("Reussi à modifier une condamnation");
+    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "duree": "string"};
+    var vali = v.validate(newCond, schema);
+    if(vali.valid){
+        db.collection('Condamnation').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newCond});
+        res.send("Reussi à modifier une condamnation");
+    }else{
+        res.send("Faux");
+    }
 })
 
 //Permet de supprimer une condamnation selon l'id
@@ -384,8 +426,14 @@ app.put('/reductionPeine/:idDet/:date', function (req,res) {
     const idDet = req.params.idDet;
     const date = req.params.date;
     const newRP = req.body;
-    db.collection('ReductionPeine').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newRP});
-    res.send("Reussi à modifier une reductionPeine");
+    var schema = {"n_type_decision": "string", "n_ecrou": "string", "date_decision": "string", "duree": "string"};
+    var vali = v.validate(newRP, schema);
+    if(vali.valid){
+        db.collection('ReductionPeine').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newRP});
+        res.send("Reussi à modifier une reductionPeine");
+    }else{
+        res.send("Faux");
+    }
 })
 
 //Permet de supprimer une reductionPeine selon l'id
@@ -431,8 +479,14 @@ app.put('/detenuAffaire/:idDet/:idAff', function (req,res) {
     const idDet = req.params.idDet;
     const idAff = req.params.idAff;
     const newDA = req.body;
-    db.collection('DetenuAffaire').updateOne({n_ecrou : idDet, n_affaire : idAff}, {$set: newDA});
-    res.send("Reussi à modifier une DetenuAffaire");
+    var schema = {"n_ecrou": "string", "n_affaire": "string", "nom_juridiction": "string"};
+    var vali = v.validate(newDA, schema);
+    if(vali.valid){
+        db.collection('DetenuAffaire').updateOne({n_ecrou : idDet, n_affaire : idAff}, {$set: newDA});
+        res.send("Reussi à modifier une DetenuAffaire");
+    }else{
+        res.send("Faux");
+    }
 })
 
 //Permet de supprimer une affaire selon l'id

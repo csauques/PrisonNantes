@@ -1,16 +1,7 @@
-
-db.Detenu.insertOne({
-    "n_ecrou":"1963",
+{
+    "n_ecrou":"1948",
     "prenom": "Franck",
     "nom": "Barbier",
     "date_naissance": "11/01/1963",
     "lieu_naissance": "Montbeliard"
-});
-
-db.Detenu.insertOne({
-    "n_ecrou":"1964",
-    "prenom": "Sophie",
-    "nom": "Darnal",
-    "date_naissance": "28/07/1964",
-    "lieu_naissance": "Besancon"
-});
+}
