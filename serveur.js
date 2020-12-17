@@ -39,6 +39,7 @@ app.get('/detenu', function (req, res) {
 app.get('/detenu/:id', function (req, res) {
     const id = req.params.id;
     db.collection('Detenu').findOne({n_ecrou : id}, function(err, result) {
+        console.log(result);
         res.send(result);
     });
 })
@@ -234,11 +235,24 @@ app.post('/incarceration', function (req, res) {
         "date_incarceration": {"type": "string"},
         "n_motif": {"type": "string"}
         },
-        "required": ["n_ecrou", "n_affaire", "nom_juridiction", "date_incarceration", "n_motif"]};
+        "required": ["n_ecrou", "n_affaire", "nom_juridiction", "date_incarceration", "n_motif"]
+    };
     const valid = ajv.validate(schema, newInc);
     if(valid){
-        db.collection('Incarceration').insertOne(newInc);
-        res.send("Reussi à créer une incarceration");
+        db.collection('Detenu').findOne({n_ecrou : newInc.n_ecrou}, function(err, result1) {
+            if (result1 != null){
+                db.collection('Affaire').findOne({n_affaire : newInc.n_affaire}, function(err, result2) {
+                    if (result2 != null){
+                        db.collection('Motif').findOne({n_motif : newInc.n_motif}, function(err, result3) {
+                            if (result3 != null){
+                                db.collection('Incarceration').insertOne(newInc);
+                                res.send("Reussi à créer une incarceration");
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }else{
         res.send("Faux");
     }
@@ -255,9 +269,30 @@ app.put('/incarceration/:idDet/:idAff', function (req,res) {
         "nom_juridiction": {"type": "string"},
         "date_incarceration": {"type": "string"},
         "n_motif": {"type": "string"}
-    };
+    }};
     const valid = ajv.validate(schema, newInc);
     if(valid){
+        if (newInc.n_ecrou != undefined){
+            db.collection('Detenu').findOne({n_ecrou : newInc.n_ecrou}, function(err, result1) {
+                if (result1 == null){
+                    res.send("Faux");
+                }
+            });
+        }
+        if (newInc.n_affaire != undefined){
+            db.collection('Affaire').findOne({n_affaire : newInc.n_affaire}, function(err, result2) {
+                if (result2 == null){
+                    res.send("Faux");
+                }
+            });
+        }
+        if (newInc.n_motif != undefined){
+            db.collection('Motif').findOne({n_motif : newInc.n_motif}, function(err, result3) {
+                if (result3 == null){
+                    res.send("Faux");
+                }
+            });
+        }
         db.collection('Incarceration').updateOne({n_ecrou : idDet, n_affaire : idAff}, {$set: newInc});
         res.send("Reussi à modifier une incarceration");
     }else{
@@ -284,7 +319,7 @@ app.get('/decision', function (req, res) {
 //Page pour lire les données d'une incarceration selon detenu et date
 app.get('/decision/:idDet/:jdate/:mdate/:adate', function (req, res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate +  "/" + req.params.adate ;
     db.collection('Decision').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
         res.send(result);
     });
@@ -301,8 +336,12 @@ app.post('/decision', function (req, res) {
         "required": ["n_type_decision", "n_ecrou", "date_decision"]};
     const valid = ajv.validate(schema, newDecision);
     if(valid){
-        db.collection('Decision').insertOne(newDecision);
-        res.send("Reussi à créer un decision");
+        db.collection('Detenu').findOne({n_ecrou : newDecision.n_ecrou}, function(err, result1) {
+            if (result1 != null){
+                db.collection('Decision').insertOne(newDecision);
+                res.send("Reussi à créer un decision");
+            }
+        });
     }else{
         res.send("Faux");
     }
@@ -311,17 +350,24 @@ app.post('/decision', function (req, res) {
 //Permet de modifier une decision selon l'id de detenu et affaire
 app.put('/decision/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate +  "/" + req.params.adate ;
     const newDecision = req.body;
     var schema = {"properties" : {
         "n_type_decision": {"type": "string"},
         "n_ecrou": {"type": "string"},
         "date_decision": {"type": "string"}
-    };
+    }};
     const valid = ajv.validate(schema, newDecision);
     if(valid){
+        if (newDecision.n_ecrou != undefined){
+            db.collection('Detenu').findOne({n_ecrou : newDecision.n_ecrou}, function(err, result1) {
+                if (result1 == null){
+                    res.send("Faux");
+                }
+            });
+        }
         db.collection('Decision').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newDecision});
-        res.send("Reussi à modifier une incarceration");
+        res.send("Reussi à modifier une decision");
     }else{
         res.send("Faux");
     }
@@ -330,9 +376,9 @@ app.put('/decision/:idDet/:jdate/:mdate/:adate', function (req,res) {
 //Permet de supprimer une decision selon l'id
 app.delete('/decision/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
     db.collection('Decision').deleteOne({n_ecrou : idDet, date_decision : date});
-    res.send("Reussi à supprimer une incarceration");
+    res.send("Reussi à supprimer une decision");
 })
 
 
@@ -347,7 +393,7 @@ app.get('/liberationDefinitive', function (req, res) {
 //Page pour lire les données d'une liberation definitive selon detenu et date
 app.get('/liberationDefinitive/:idDet/:jdate/:mdate/:adate', function (req, res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
     db.collection('LiberationDefinitive').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
         res.send(result);
     });
@@ -365,8 +411,12 @@ app.post('/liberationDefinitive', function (req, res) {
         "required": ["n_type_decision", "n_ecrou", "date_decision", "date_liberation"]};
     const valid = ajv.validate(schema, newLB);
     if(valid){
-        db.collection('LiberationDefinitive').insertOne(newLB);
-        res.send("Reussi à créer une libération définitive");
+        db.collection('Detenu').findOne({n_ecrou : newLB.n_ecrou}, function(err, result1) {
+            if (result1 != null){
+                db.collection('LiberationDefinitive').insertOne(newLB);
+                res.send("Reussi à créer une libération définitive");
+            }
+        });
     }else{
         res.send("Faux");
     }
@@ -375,16 +425,23 @@ app.post('/liberationDefinitive', function (req, res) {
 //Permet de modifier une liberation definitive selon l'id de detenu et affaire
 app.put('/liberationDefinitive/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
     const newLB = req.body;
     var schema = {"properties" : {
         "n_type_decision": {"type": "string"},
         "n_ecrou": {"type": "string"},
         "date_decision": {"type": "string"},
         "date_liberation": {"type": "string"}
-    };
+    }};
     const valid = ajv.validate(schema, newLB);
     if(valid){
+        if (newLB.n_ecrou != undefined){
+            db.collection('Detenu').findOne({n_ecrou : newLB.n_ecrou}, function(err, result1) {
+                if (result1 == null){
+                    res.send("Faux");
+                }
+            });
+        }
         db.collection('LiberationDefinitive').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newLB});
         res.send("Reussi à modifier une liberation definitive");
     }else{
@@ -395,7 +452,7 @@ app.put('/liberationDefinitive/:idDet/:jdate/:mdate/:adate', function (req,res) 
 //Permet de supprimer une liberation definitive selon l'id
 app.delete('/liberationDefinitive/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
     db.collection('LiberationDefinitive').deleteOne({n_ecrou : idDet, date_decision : date});
     res.send("Reussi à supprimer une liberation definitive");
 })
@@ -411,7 +468,7 @@ app.get('/condamnation', function (req, res) {
 //Page pour lire les données d'une condamntion selon detenu et date
 app.get('/condamnation/:idDet/:jdate/:mdate/:adate', function (req, res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
     db.collection('Condamnation').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
         res.send(result);
     });
@@ -429,8 +486,12 @@ app.post('/condamnation', function (req, res) {
         "required": ["n_type_decision", "n_ecrou", "date_decision", "duree"]};
     const valid = ajv.validate(schema, newCond);
     if(valid){
-        db.collection('Condamnation').insertOne(newCond);
-        res.send("Reussi à créer une condamnation");
+        db.collection('Detenu').findOne({n_ecrou : newCond.n_ecrou}, function(err, result1) {
+            if (result1 != null){
+                db.collection('Condamnation').insertOne(newCond);
+                res.send("Reussi à créer une condamnation");
+            }
+        });
     }else{
         res.send("Faux");
     }
@@ -439,16 +500,23 @@ app.post('/condamnation', function (req, res) {
 //Permet de modifier une condamnation selon l'id de detenu et affaire
 app.put('/condamnation/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
     const newCond = req.body;
     var schema = {"properties" : {
         "n_type_decision": {"type": "string"},
         "n_ecrou": {"type": "string"},
         "date_decision": {"type": "string"},
         "duree": {"type": "string"}
-    };
+    }};
     const valid = ajv.validate(schema, newCond);
     if(valid){
+        if (newCond.n_ecrou != undefined){
+            db.collection('Detenu').findOne({n_ecrou : newCond.n_ecrou}, function(err, result1) {
+                if (result1 == null){
+                    res.send("Faux");
+                }
+            });
+        }
         db.collection('Condamnation').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newCond});
         res.send("Reussi à modifier une condamnation");
     }else{
@@ -459,7 +527,7 @@ app.put('/condamnation/:idDet/:jdate/:mdate/:adate', function (req,res) {
 //Permet de supprimer une condamnation selon l'id
 app.delete('/condamnation/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
     db.collection('Condamnation').deleteOne({n_ecrou : idDet, date_decision : date});
     res.send("Reussi à supprimer une condamnation");
 })
@@ -475,7 +543,7 @@ app.get('/reductionPeine', function (req, res) {
 //Page pour lire les données d'une reductions de peine selon detenu et date
 app.get('/reductionPeine/:idDet/:jdate/:mdate/:adate', function (req, res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
     db.collection('ReductionPeine').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
         res.send(result);
     });
@@ -485,16 +553,20 @@ app.get('/reductionPeine/:idDet/:jdate/:mdate/:adate', function (req, res) {
 app.post('/reductionPeine', function (req, res) {
     const newRP = req.body;
     var schema = {"properties" : {
-        "n_type_decision": {"type": "string"},
-        "n_ecrou": {"type": "string"},
-        "date_decision": {"type": "string"},
-        "duree": {"type": "string"}
+            "n_type_decision": {"type": "string"},
+            "n_ecrou": {"type": "string"},
+            "date_decision": {"type": "string"},
+            "duree": {"type": "string"}
         },
         "required": ["n_type_decision", "n_ecrou", "date_decision", "duree"]};
-    const valid = ajv.validate(schema, newDetenu);
+    const valid = ajv.validate(schema, newRP);
     if(valid){
-        db.collection('ReductionPeine').insertOne(newRP);
-        res.send("Reussi à créer une réduction de peine");
+        db.collection('Detenu').findOne({n_ecrou : newRP.n_ecrou}, function(err, result1) {
+            if (result1 != null){
+                db.collection('ReductionPeine').insertOne(newRP);
+                res.send("Reussi à créer une réduction de peine");
+            }
+        });
     }else{
         res.send("Faux");
     }
@@ -503,16 +575,23 @@ app.post('/reductionPeine', function (req, res) {
 //Permet de modifier une reductionPeine selon l'id de detenu et affaire
 app.put('/reductionPeine/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
     const newRP = req.body;
     var schema = {"properties" : {
         "n_type_decision": {"type": "string"},
         "n_ecrou": {"type": "string"},
         "date_decision": {"type": "string"},
         "duree": {"type": "string"}
-    };
+    }};
     const valid = ajv.validate(schema, newRP);
     if(valid){
+        if (newRP.n_ecrou != undefined){
+            db.collection('Detenu').findOne({n_ecrou : newRP.n_ecrou}, function(err, result1) {
+                if (result1 == null){
+                    res.send("Faux");
+                }
+            });
+        }
         db.collection('ReductionPeine').updateOne({n_ecrou : idDet, date_decision : date}, {$set: newRP});
         res.send("Reussi à modifier une reductionPeine");
     }else{
@@ -523,7 +602,7 @@ app.put('/reductionPeine/:idDet/:jdate/:mdate/:adate', function (req,res) {
 //Permet de supprimer une reductionPeine selon l'id
 app.delete('/reductionPeine/:idDet/:jdate/:mdate/:adate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate  "/" + req.params.adate ;
+    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
     db.collection('ReductionPeine').deleteOne({n_ecrou : idDet, date_decision : date});
     res.send("Reussi à supprimer une reductionPeine");
 })
@@ -549,21 +628,29 @@ app.get('/detenuAffaire/:idDet/:idAff', function (req, res) {
 app.post('/detenuAffaire', function (req, res) {
     const newDA = req.body;
     var schema = {"properties" : {
-        "n_ecrou": {"type": "string"},
-        "n_affaire": {"type": "string"},
-        "nom_juridiction": {"type": "string"}
+            "n_ecrou": {"type": "string"},
+            "n_affaire": {"type": "string"},
+            "nom_juridiction": {"type": "string"}
         },
         "required": ["n_ecrou", "n_affaire", "nom_juridiction"]};
     const valid = ajv.validate(schema, newDA);
     if(valid){
-        db.collection('DetenuAffaire').insertOne(newDA);
-        res.send("Reussi à créer un detenu et affaire");
+        db.collection('Detenu').findOne({n_ecrou : newDA.n_ecrou}, function(err, result1) {
+            if (result1 != null){
+                db.collection('Affaire').findOne({n_affaire : newDA.n_affaire}, function(err, result2) {
+                    if (result2 != null){
+                        db.collection('DetenuAffaire').insertOne(newDA);
+                        res.send("Reussi à créer un detenu et affaire");
+                    }
+                });
+            }
+        });
     }else{
         res.send("Faux");
     }
 })
 
-//Permet de modifier une incarceration selon l'id de detenu et affaire
+//Permet de modifier une detenu affaire selon l'id de detenu et affaire
 app.put('/detenuAffaire/:idDet/:idAff', function (req,res) {
     const idDet = req.params.idDet;
     const idAff = req.params.idAff;
@@ -572,9 +659,23 @@ app.put('/detenuAffaire/:idDet/:idAff', function (req,res) {
         "n_ecrou": {"type": "string"},
         "n_affaire": {"type": "string"},
         "nom_juridiction": {"type": "string"}
-    };
+    }};
     const valid = ajv.validate(schema, newDA);
     if(valid){
+        if (newDA.n_ecrou != undefined){
+            db.collection('Detenu').findOne({n_ecrou : newDA.n_ecrou}, function(err, result1) {
+                if (result1 == null){
+                    res.send("Faux");
+                }
+            });
+        }
+        if (newDA.n_affaire != undefined){
+            db.collection('Affaire').findOne({n_affaire : newDA.n_affaire}, function(err, result2) {
+                if (result2 == null){
+                    res.send("Faux");
+                }
+            });
+        }
         db.collection('DetenuAffaire').updateOne({n_ecrou : idDet, n_affaire : idAff}, {$set: newDA});
         res.send("Reussi à modifier une DetenuAffaire");
     }else{
