@@ -22,8 +22,6 @@ client.connect(err => {
 });
 
 
-
-
 //Page d'accueil
 app.get('/', function (req, res) {
     res.send("Serveur pour la prison de Nantes !");
