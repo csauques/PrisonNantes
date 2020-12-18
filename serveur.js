@@ -52,7 +52,7 @@ app.post('/detenu', function (req, res) {
         "n_ecrou": {"type": "string"},
         "prenom": {"type": "string"},
         "nom": {"type": "string"},
-        "date_naissance": {"type": "string"},
+        " _naissance": {"type": "string"},
         "lieu_naissance": {"type": "string"}
         },
         "required": ["n_ecrou", "nom", "prenom", "date_naissance", "lieu_naissance"]};
@@ -324,9 +324,9 @@ app.get('/decision', function (req, res) {
 })
 
 //Page pour lire les données d'une incarceration selon detenu et date
-app.get('/decision/:idDet/:jdate/:mdate/:adate', function (req, res) {
+app.get('/decision/:idDet/:date', function (req, res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate +  "/" + req.params.adate ;
+    const date = req.params.date;
     db.collection('Decision').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
         res.send(result);
     });
@@ -357,9 +357,9 @@ app.post('/decision', function (req, res) {
 })
 
 //Permet de modifier une decision selon l'id de detenu et affaire
-app.put('/decision/:idDet/:jdate/:mdate/:adate', function (req,res) {
+app.put('/decision/:idDet/:date', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate +  "/" + req.params.adate ;
+    const date = req.params.date;
     const newDecision = req.body;
     var schema = {"properties" : {
         "n_type_decision": {"type": "string"},
@@ -383,9 +383,9 @@ app.put('/decision/:idDet/:jdate/:mdate/:adate', function (req,res) {
 })
 
 //Permet de supprimer une decision selon l'id
-app.delete('/decision/:idDet/:jdate/:mdate/:adate', function (req,res) {
+app.delete('/decision/:idDet/:date', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
+    const date = req.params.date ;
     db.collection('Decision').deleteOne({n_ecrou : idDet, date_decision : date});
     res.send("Reussi à supprimer une decision");
 })
@@ -400,9 +400,9 @@ app.get('/liberationDefinitive', function (req, res) {
 })
 
 //Page pour lire les données d'une liberation definitive selon detenu et date
-app.get('/liberationDefinitive/:idDet/:jdate/:mdate/:adate', function (req, res) {
+app.get('/liberationDefinitive/:idDet/:date', function (req, res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
+    const date = req.params.date ;
     db.collection('LiberationDefinitive').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
         res.send(result);
     });
@@ -434,9 +434,9 @@ app.post('/liberationDefinitive', function (req, res) {
 })
 
 //Permet de modifier une liberation definitive selon l'id de detenu et affaire
-app.put('/liberationDefinitive/:idDet/:jdate/:mdate/:adate', function (req,res) {
+app.put('/liberationDefinitive/:idDet/date', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
+    const date = req.params.date ;
     const newLB = req.body;
     var schema = {"properties" : {
         "n_type_decision": {"type": "string"},
@@ -461,9 +461,9 @@ app.put('/liberationDefinitive/:idDet/:jdate/:mdate/:adate', function (req,res) 
 })
 
 //Permet de supprimer une liberation definitive selon l'id
-app.delete('/liberationDefinitive/:idDet/:jdate/:mdate/:adate', function (req,res) {
+app.delete('/liberationDefinitive/:idDet/:date', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
+    const date = req.params.date ;
     db.collection('LiberationDefinitive').deleteOne({n_ecrou : idDet, date_decision : date});
     res.send("Reussi à supprimer une liberation definitive");
 })
@@ -477,9 +477,9 @@ app.get('/condamnation', function (req, res) {
 })
 
 //Page pour lire les données d'une condamntion selon detenu et date
-app.get('/condamnation/:idDet/:jdate/:mdate/:adate', function (req, res) {
+app.get('/condamnation/:idDet/:date', function (req, res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
+    const date = req.params.date ;
     db.collection('Condamnation').findOne({n_ecrou : idDet, date_decision : date}, function(err, result) {
         res.send(result);
     });
@@ -511,9 +511,9 @@ app.post('/condamnation', function (req, res) {
 })
 
 //Permet de modifier une condamnation selon l'id de detenu et affaire
-app.put('/condamnation/:idDet/:jdate/:mdate/:adate', function (req,res) {
+app.put('/condamnation/:idDet/:date', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
+    const date = req.params.date ;
     const newCond = req.body;
     var schema = {"properties" : {
         "n_type_decision": {"type": "string"},
@@ -538,9 +538,9 @@ app.put('/condamnation/:idDet/:jdate/:mdate/:adate', function (req,res) {
 })
 
 //Permet de supprimer une condamnation selon l'id
-app.delete('/condamnation/:idDet/:jdate/:mdate/:adate', function (req,res) {
+app.delete('/condamnation/:idDet/:jdate', function (req,res) {
     const idDet = req.params.idDet;
-    const date = req.params.jdate + "/" + req.params.mdate + "/" + req.params.adate ;
+    const date = req.params.jdate ;
     db.collection('Condamnation').deleteOne({n_ecrou : idDet, date_decision : date});
     res.send("Reussi à supprimer une condamnation");
 })
