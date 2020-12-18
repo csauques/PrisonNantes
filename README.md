@@ -78,9 +78,10 @@ node test.js put detenu 1963 json/detenuMod.json
 * DELETE
 ```bash
 node test.js delete detenu 1963
+```
+
 
 Pour les fichiers json, il y a un jeu de test pour chaque table dans le dossier json.
-```
 
 ## Base de données
 
