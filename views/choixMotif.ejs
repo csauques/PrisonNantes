@@ -1,51 +1,38 @@
 
-<head>
-    <style type="text/css" media="screen">
-        body{
-        	position: absolute;
-        	width:100%;
-        	height:100%;
-        	background:#D0ECE7;
-        }
-        form{
-        	background:  #73C6B6 ;
-        	position: absolute;
-        	top: 20%;
-        	left: 25%;
-        	right: 25%;
-        	bottom: 20%;
-        	border :4mm ridge grey;
-        }
-        .inline{
-        margin-left:30%;
-        }
-        input{
-        	padding:3px;
-        	margin-bottom:10px;
-        	margin-top:10px;
-        }
-        input[type="submit"]{
-        	margin-left:48%;
-        }
-        h3{
-        	text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <form action="" method="post">
-      <% for(var i=0; i<motifs.length; i++){ %>
-          <div>
-              <input type="radio" name="n_motif" value=<%= motifs[i].n_motif %> id=<%= motifs[i].n_motif %> />
-              <label><%= motifs[i].n_motif %> :  <%= motifs[i].libelle_motif %></label>
-          </div>
+<html>
+    <head>
+      <title>Choix d'une affaire</title>
+      <link rel="stylesheet" href="../css/menu.css">
+      <link rel="stylesheet" href="../css/style.css">
+    </head>
 
-      <% } %>
-      <div>
-           <input type="radio" name="n_motif" value="-1" id="-1" /> <label> Nouveau motif </label>
-      </div>
-      <div>
-          <input type="submit" value="Envoyer" />
-      </div>
-    </form>
-</body>
+    <header>
+        <nav>
+            <ul id="menu">
+                <li><a href="/incarcerer">Incarcérer un prisonnier</a></li>
+                <li><a href="/deciderCondamnation">Condamnation</a></li>
+                <li><a href="/deciderReductionPeine">Reduction de peine</a></li>
+                <li><a href="/deciderLiberationDefinitive">Liberté définitive</a></li>
+                <li><a href="/preventive">Prisonniers en préventive</a></li>
+            </ul>
+        </nav>
+    </header>
+    <body>
+        <h1>Choisir un motif</h1>
+        <form action="" method="post">
+          <% for(var i=0; i<motifs.length; i++){ %>
+              <div>
+                  <label> <input type="radio" name="n_motif" value=<%= motifs[i].n_motif %> id=<%= motifs[i].n_motif %> /> <%= motifs[i].n_motif %> :  <%= motifs[i].libelle_motif %></label>
+              </div>
+
+          <% } %>
+          <div>
+              <label> Nouveau motif </label>
+               <input type="radio" name="n_motif" value="-1" id="-1" />
+          </div>
+          <div>
+              <input type="submit" value="Envoyer" />
+          </div>
+        </form>
+    </body>
+</html>

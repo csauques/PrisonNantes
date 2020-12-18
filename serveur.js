@@ -1,4 +1,4 @@
-//const crud = require('./crud');
+
 const express = require('express'),
     app     = express(),
     port    = parseInt(process.env.PORT, 10) || 3000;
@@ -10,6 +10,7 @@ const ajv = new Ajv({ removeAdditional:'all' });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(__dirname + '/public'));
 
 let db;
 
@@ -19,8 +20,6 @@ const client = new MongoClient(uri, { useNewUrlParser: true });
 client.connect(err => {
     db = client.db('Prison');
 });
-
-
 
 
 //Page d'accueil

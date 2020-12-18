@@ -1,47 +1,35 @@
-<head>
-    <style type="text/css" media="screen">
-        body{
-        	position: absolute;
-        	width:100%;
-        	height:100%;
-        	background:#D0ECE7;
-        }
-        form{
-        	background:  #73C6B6 ;
-        	position: absolute;
-        	top: 20%;
-        	left: 25%;
-        	right: 25%;
-        	bottom: 20%;
-        	border :4mm ridge grey;
-        }
-        .inline{
-        margin-left:30%;
-        }
-        input{
-        	padding:3px;
-        	margin-bottom:10px;
-        	margin-top:10px;
-        }
-        input[type="submit"]{
-        	margin-left:48%;
-        }
-        h3{
-        	text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <form action="newMotif" method="post">
-      <div>
-        <label for="n_motif">Numero Motif :</label>
-        <input type="number" required min="0" id="n_motif" name="n_motif">
-      </div>
-      <div>
-        <label for="prenom">Libelle du motif :</label>
-        <input type="text" required id="libelle_motif" name="libelle_motif">
-      </div>
+<html>
+    <head>
+      <title>Choix d'une affaire</title>
+      <link rel="stylesheet" href="../css/menu.css">
+      <link rel="stylesheet" href="../css/style.css">
+    </head>
+    <header>
+        <nav>
+            <ul id="menu">
+                <li><a href="/incarcerer">Incarcérer un prisonnier</a></li>
+                <li><a href="/deciderCondamnation">Condamnation</a></li>
+                <li><a href="/deciderReductionPeine">Reduction de peine</a></li>
+                <li><a href="/deciderLiberationDefinitive">Liberté définitive</a></li>
+                <li><a href="/preventive">Prisonniers en préventive</a></li>
+            </ul>
+        </nav>
+    </header>
 
-      <input type="submit" value="Envoyer" />
-    </form>
-</body>
+    <body>
+        <h1>Créer un nouveau motif</h1>
+        <form action="newMotif" method="post">
+          <div>
+            <label for="n_motif">Numero Motif :</label>
+            <input type="number" required min="0" max="99" id="n_motif" name="n_motif">
+          </div>
+          <div>
+            <label for="prenom">Libelle du motif :</label>
+            <input type="text" required id="libelle_motif" name="libelle_motif">
+          </div>
+
+          <input type="submit" value="Envoyer" />
+        </form>
+    </body>
+
+</html>
