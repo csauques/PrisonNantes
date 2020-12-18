@@ -1,3 +1,24 @@
-<% for(var i=0; i<detenuPreventive.length; i++){ %>
-<p><%= detenuPreventive[i].n_ecrou %>  <%= detenuPreventive[i].prenom %>  <%= detenuPreventive[i].nom %> <%= detenuPreventive[i].date_naissance %>  <%= detenuPreventive[i].lieu_naissance %></p>
-<% } %>
+<html>
+    <head>
+      <title>Choix d'une affaire</title>
+      <link rel="stylesheet" href="../css/menu.css">
+      <link rel="stylesheet" href="../css/style.css">
+    </head>
+    <header>
+        <nav>
+            <ul id="menu">
+                <li><a href="/incarcerer">Incarcérer un prisonnier</a></li>
+                <li><a href="/deciderCondamnation">Condamnation</a></li>
+                <li><a href="/deciderReductionPeine">Reduction de peine</a></li>
+                <li><a href="/deciderLiberationDefinitive">Liberté définitive</a></li>
+                <li><a href="/preventive">Prisonniers en préventive</a></li>
+            </ul>
+        </nav>
+    </header>
+    <body>
+        <% for(var i=0; i<detenuPreventive.length; i++){ %>
+        <p><%= detenuPreventive[i].n_ecrou %>  <%= detenuPreventive[i].prenom %>  <%= detenuPreventive[i].nom %> <%= detenuPreventive[i].date_naissance %>  <%= detenuPreventive[i].lieu_naissance %></p>
+        <% } %>
+    </body>
+
+</html>

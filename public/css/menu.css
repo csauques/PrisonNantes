@@ -1,0 +1,29 @@
+header{
+    width: auto;
+    margin: auto;
+}
+nav{
+    top: 0;
+    width: 100%;
+    background : #000;
+    margin: 0; padding: 0;
+    color: black;
+    text-align: center;
+}
+#menu{
+    margin:0;
+}
+#menu li{
+    display: inline;
+    list-style: none;
+}
+
+body{
+    margin:0;
+}
+
+#menu li a{
+    display:inline-block;
+    margin: 20px;
+    color : white;
+}
