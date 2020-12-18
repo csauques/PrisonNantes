@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
 <html>
     <head>
       <title>Choix d'une affaire</title>
@@ -18,11 +18,11 @@
         </nav>
     </header>
     <body>
+        <h1>Choisir un motif</h1>
         <form action="" method="post">
           <% for(var i=0; i<motifs.length; i++){ %>
               <div>
-                  <label><%= motifs[i].n_motif %> :  <%= motifs[i].libelle_motif %></label>
-                  <input type="radio" name="n_motif" value=<%= motifs[i].n_motif %> id=<%= motifs[i].n_motif %> />
+                  <label> <input type="radio" name="n_motif" value=<%= motifs[i].n_motif %> id=<%= motifs[i].n_motif %> /> <%= motifs[i].n_motif %> :  <%= motifs[i].libelle_motif %></label>
               </div>
 
           <% } %>

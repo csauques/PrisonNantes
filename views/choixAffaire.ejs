@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
 <html>
     <head>
       <title>Choix d'une affaire</title>
@@ -17,13 +17,13 @@
             </ul>
         </nav>
     </header>
-
     <body>
+        <h1>Choisir une affaire</h1>
         <form action="" method="post">
             <% for(var i=0; i<affaires.length; i++){ %>
                 <div>
-                    <label for= <%= affaires[i].n_affaire %> > <%= affaires[i].n_affaire %> dans <%= affaires[i].nom_juridiction %></label>
-                    <input type="radio" name="n_affaire" value=<%= affaires[i].n_affaire %> id=<%= affaires[i].n_affaire %> />
+                    <label for= <%= affaires[i].n_affaire %> > <input type="radio" name="n_affaire" value=<%= affaires[i].n_affaire %> id=<%= affaires[i].n_affaire %> /> <%= affaires[i].n_affaire %> dans <%= affaires[i].nom_juridiction %></label>
+
                 </div>
             <% } %>
             <div>

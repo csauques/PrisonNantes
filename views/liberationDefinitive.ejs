@@ -16,12 +16,12 @@
         </nav>
     </header>
     <body>
+        <h1>Décider d'une libération définitive</h1>
         <form action="" method="post">
 
 
             <% for(var i=0; i<detenus.length ; i++){ %>
-                <label for=<%= detenus[i].n_ecrou %> > <%= detenus[i].n_ecrou %>  <%= detenus[i].prenom %>  <%= detenus[i].nom %></label>
-                <input type="radio" name="n_ecrou" value=<%= detenus[i].n_ecrou %> id=<%= detenus[i].n_ecrou %> />
+                <label for=<%= detenus[i].n_ecrou %> > <input type="radio" name="n_ecrou" value=<%= detenus[i].n_ecrou %> id=<%= detenus[i].n_ecrou %> /> <%= detenus[i].n_ecrou %>  <%= detenus[i].prenom %>  <%= detenus[i].nom %></label>
             <% } %>
 
             <div>

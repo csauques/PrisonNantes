@@ -8,6 +8,9 @@ body{
     font-weight: bold;
 }
 
+h1{
+    text-align: center;
+}
 
 form {
     position: absolute;
@@ -41,7 +44,7 @@ label {
     margin-top: 0.75vw;
     margin-left: 0.75vw;
     display:block;
-    text-align: center;
+
 }
 
 input[type=submit]{
@@ -54,3 +57,23 @@ input[type=submit]{
     box-shadow: 0.25vw 0.25vw 0.25vw #000000;
     cursor:pointer;
 }
+
+input[type=radio] {
+ background-color:transparent;
+ border:none;
+ width:10px;
+ }
+
+ p {
+     margin-top: 2vw;
+     margin-bottom: 2vw;
+     margin-left: 37.5vw;
+     display: absolute;
+     background-color: rgb(175, 175, 175);
+     padding: 2vw;
+     width: 20vw;
+     border : 0.12vw solid rgb(0, 0, 0);
+     border-radius: 2vw 2vw 2vw 2vw;
+     align-content: center;
+     box-shadow: 0.25vw 0.25vw 0.25vw #000000;
+ }
