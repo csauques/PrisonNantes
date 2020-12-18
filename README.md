@@ -30,7 +30,7 @@ Et les tests se lance de plusieurs façon, on va vous détailler comment tester 
 
 * Et pour voir les prisonniers en préventive : [http://localhost:3000/preventive](http://localhost:3000/preventive)
 
-## CRUD
+### CRUD
 
 Mais il n'y a pas que ça, on peut tester le CRUD des différentes tables de la base de données qui sont :
 - affaire
@@ -44,9 +44,9 @@ Mais il n'y a pas que ça, on peut tester le CRUD des différentes tables de la 
 - reductionPeine
 
 Chaque table a une clé primaire (seule ou composé), les voici pour chaque table :
-- affaire : n_affaire, un string de 2 caractères (ex : 44)
-- detenu : n_ecrou, un string de 4 caractères (ex : 1963)
-- motif : n_affaire, un string de 2 caractères (ex : 01)
+- affaire : n_affaire, un string  (ex : 44)
+- detenu : n_ecrou, un string  (ex : 1963)
+- motif : n_affaire, un string  (ex : 01)
 - decision : composé de deux clés, n_ecrou et d'une date de format DD/MM/AAAA (ex : 1963/24/02/2006)
 - condamnation : composé de deux clés, n_ecrou et d'une date de format DD/MM/AAAA (ex : 1963/24/02/2006)
 - liberationDefinitive : composé de deux clés, n_ecrou et d'une date de format DD/MM/AAAA (ex : 1963/24/02/2006)
@@ -63,19 +63,23 @@ Il y a 4 opérations :
 
 * CREATE :
 ```bash
-node test.js post Detenu json/detenu.json
+node test.js post detenu json/detenu.json
 ```
 
 * READ :         
 directement sur un navigateur avec [http://localhost:3000/Detenu](http://localhost:3000/Detenu)      
-si vous voulez n'avoir qu'une donnée, ajouter l'id à la fin [http://localhost:3000/Detenu/1963](http://localhost:3000/Detenu/1963) 
+si vous voulez n'avoir qu'une donnée, ajouter l'id à la fin [http://localhost:3000/Detenu/1963](http://localhost:3000/Detenu/1963)
 
 * UPDATE
 ```bash
-node test.js put Detenu 1963 json/detenuMod.json
+node test.js put detenu 1963 json/detenuMod.json
 ```
 
 * DELETE
 ```bash
-node test.js delete Detenu 1963
+node test.js delete detenu 1963
 ```
+
+## Base de données
+
+On ne peut pas rajouter n'importe quelle données dans la table, dans les json à ajouter, les attributs qui ne sont pas dans la table de base ne sont pas comptés, et sur les clés étrangères, on ne peut pas mettre une clé qui existe pas. Il y aussi des clés primaires (les id), donc on peut pas rajouter de données avec deux même id.

@@ -8,9 +8,6 @@ body{
     font-weight: bold;
 }
 
-div {
-    
-}
 
 form {
     position: absolute;
@@ -44,8 +41,9 @@ label {
     margin-top: 0.75vw;
     margin-left: 0.75vw;
     display:block;
+    text-align: center;
 }
- 
+
 input[type=submit]{
     font-size: 1.25vw;
     font-weight: bold ;

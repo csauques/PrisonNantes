@@ -18,11 +18,9 @@
 
     <body>
         <form action="" method="post">
-
-
           <% for(var i=0; i<detenus.length; i++){ %>
-          <input type="radio" name="n_ecrou" value=<%= detenus[i].n_ecrou %> id=<%= detenus[i].n_ecrou %> />
-          <p><%= detenus[i].n_ecrou %>  <%= detenus[i].prenom %>  <%= detenus[i].nom %> <%= detenus[i].date_naissance %>  <%= detenus[i].lieu_naissance %></p>
+              <label><%= detenus[i].n_ecrou %>  <%= detenus[i].prenom %>  <%= detenus[i].nom %> </label>
+              <input type="radio" name="n_ecrou" value=<%= detenus[i].n_ecrou %> id=<%= detenus[i].n_ecrou %> />
           <% } %>
 
           <div>
