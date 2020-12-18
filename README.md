@@ -26,3 +26,30 @@ Et les tests se lance de plusieurs façon, on va vous détailler comment tester 
 
 * Et pour voir les prisonniers en préventive :
 - http://localhost:3000/preventive
+
+Mais il n'y a pas que ça, on peut tester le CRUD des différentes tables de la base de données qui sont :
+- affaire
+- condamnation
+- decision
+- detenuAffaire
+- detenu
+- incarceration
+- liberationDefinitive
+- motif
+- reductionPeine
+
+Et pour faire un test, la commande à faire sur un terminal ressemble à cela :
+- node test.js operations tableDonnees (idTable) (fichierJson)
+
+Il y a 4 opérations :
+* CREATE :
+- node test.js post Detenu json/detenu.json
+
+* READ :
+- directement sur un navigateur avec http://localhost:3000/<nomtable>(/<id> si on ne veut chercher qu'une donnée)
+
+* UPDATE
+- node test.js put Detenu 1963 json/detenuMod.json
+
+* DELETE
+- node test.js delete Detenu 1963
