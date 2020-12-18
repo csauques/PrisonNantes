@@ -1,6 +1,6 @@
 
-db.DetenuAffaire.insertOne({
-  "n_ecrou":"1993",
+{
+  "n_ecrou":"1964",
   "n_affaire": "44",
   "nom_juridiction": "Nantes"
-});
+}

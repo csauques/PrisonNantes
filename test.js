@@ -1,36 +1,36 @@
 const axios = require('axios');
 var myArgs = process.argv.slice(2);
+const fs = require('fs');
+
 console.log('myArgs: ', myArgs);
 
 switch (myArgs[0]) {
     case 'post':
-        axios.post('http://localhost:3000/detenu', {
-            n_ecrou: "1234",
-            prenom: 'Fred',
-            nom: 'Flintstone'
+        fs.readFile(myArgs[2], function(erreur, fichier) {
+           let dataFile = JSON.parse(fichier);
+           axios.post('http://localhost:3000/' + myArgs[1], dataFile)
+           .then(function (response) {
+              console.log(response);
+           })
+           .catch(function (error) {
+               console.log(error);
+           });
         })
-        .then(function (response) {
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
         break;
     case 'put':
-        axios.put('http://localhost:3000/detenu/1234', {
-            n_ecrou: "1234",
-            prenom: 'Fred',
-            nom: 'Grenier'
-        })
-        .then(function (response) {
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
+        fs.readFile(myArgs[3], function(erreur, fichier) {
+           let dataFile = JSON.parse(fichier);
+            axios.put('http://localhost:3000/' + myArgs[1] + '/' +  myArgs[2], dataFile)
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         });
         break;
     case 'delete':
-        axios.delete('http://localhost:3000/detenu/1234')
+        axios.delete('http://localhost:3000/' + myArgs[1] + '/' +  myArgs[2])
         .then(function (response) {
             console.log(response);
         })
@@ -38,5 +38,5 @@ switch (myArgs[0]) {
             console.log(error);
         });
     default:
-        console.log('Option inexistance');
+        console.log('Option inexistante');
 }

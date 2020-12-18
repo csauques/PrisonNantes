@@ -1,6 +1,5 @@
-var creatingDate = new Date('1995-12-17T00:00:00Z');
-db.Affaire.insertOne({
-    "n_affaire":"44",
+{
+    "n_affaire":"50",
     "nom_juridiction": "Nantes",
-    "date_faits": creatingDate
-});
+    "date_faits": "17/10/1998"
+}

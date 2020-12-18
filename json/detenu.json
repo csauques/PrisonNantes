@@ -1,17 +1,7 @@
-var creatingDate = new Date('1963-01-11T00:00:00Z');
-db.Detenu.insertOne({
-    "n_ecrou":"1963",
-    "prenom": "Franck",
-    "nom": "Barbier",
-    "date_naissance": creatingDate,
-    "lieu_naissance": "Montbeliard"
-});
-
-var creatingDate = new Date('1964-07-28T00:00:00Z');
-db.Detenu.insertOne({
-    "n_ecrou":"1964",
-    "prenom": "Sophie",
-    "nom": "Darnal",
-    "date_naissance": creatingDate,
-    "lieu_naissance": "Besancon"
-});
+{
+    "n_ecrou":"1948",
+    "prenom": "Chloe",
+    "nom": "Sauques",
+    "date_naissance": "11/01/1963",
+    "lieu_naissance": "Lyon"
+}

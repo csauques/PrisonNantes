@@ -1,9 +1,6 @@
-
-var creatingDate = new Date('2006-11-23T00:00:00Z');
-var creatingDate1 = new Date('2007-01-01T00:00:00Z');
-db.LiberationDefinitive.insertOne({
+{
     "n_type_decision":"3",
     "n_ecrou": "1964",
-    "date_decision" : creatingDate ,
-    "date_liberation" : creatingDate1
-});
+    "date_decision" : "23/11/2070" ,
+    "date_liberation" : "01/01/2800"
+}

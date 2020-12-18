@@ -1,8 +1,6 @@
-[
-    {
-        "n_type_decision":,
-        "n_ecrou":,
-        "date_decision" : ,
-        "duree" :
-    }
-]
+{
+    "n_type_decision": "2",
+    "n_ecrou": "1964",
+    "date_decision" : "15/01/2004" ,
+    "duree" : "254"
+}
