@@ -47,10 +47,10 @@ Chaque table a une clé primaire (seule ou composé), les voici pour chaque tabl
 - affaire : n_affaire, un string  (ex : 44)
 - detenu : n_ecrou, un string  (ex : 1963)
 - motif : n_affaire, un string  (ex : 01)
-- decision : composé de deux clés, n_ecrou et d'une date de format DD/MM/AAAA (ex : 1963/24/02/2006)
-- condamnation : composé de deux clés, n_ecrou et d'une date de format DD/MM/AAAA (ex : 1963/24/02/2006)
-- liberationDefinitive : composé de deux clés, n_ecrou et d'une date de format DD/MM/AAAA (ex : 1963/24/02/2006)
-- reductionPeine : composé de deux clés, n_ecrou et d'une date de format DD/MM/AAAA (ex : 1963/24/02/2006)
+- decision : composé de deux clés, n_ecrou et d'une date de format AAAA-MM-DD (ex : 1963/2006-02-12)
+- condamnation : composé de deux clés, n_ecrou et d'une date de format AAAA-MM-DD (ex : 1963/2006-02-12)
+- liberationDefinitive : composé de deux clés, n_ecrou et d'une date de format AAAA-MM-DD (ex : 1963/2006-02-12)
+- reductionPeine : composé de deux clés, n_ecrou et d'une date de format AAAA-MM-DD (ex : 1963/2006-02-12)
 - detenuAffaire : composé de deux clés, n_ecrou et n_affaire (ex : 1963/44)
 
 Et pour faire un test, la commande à faire sur un terminal ressemble à cela :
